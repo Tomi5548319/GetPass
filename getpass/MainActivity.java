@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_title);
 
-        startEnterKeyActivity(); // Password is required to access other passwords
+        startEnterKeyActivity(); // Password is required in order to access other passwords
     }
 
     private void startEnterKeyActivity(){
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) { // Handle activity results here
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
             case (1) : { // AddNewPasswordActivity closed
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 					// Get the key from the returned intent and start main
                     mKey = data.getStringExtra("KEY");
                     main();
-                }else{ // Activity didn't close properly, it has to be reloaded
+                }else{ // EnterKeyActivity didn't close properly, it has to be reloaded
                     startEnterKeyActivity();
                 }
                 break;
@@ -77,12 +77,9 @@ public class MainActivity extends AppCompatActivity
                     int position = data.getIntExtra("POSITION", -1);
                     String name = data.getStringExtra("NAME");
 
-					// TODO check if this if is necessary
-                    if(ID != -1 && position != -1){
-                        myDb.updateEditData(ID, name);
-                        mRecyclerList.get(position).changeText1(name);
-                        mAdapter.notifyItemChanged(position);
-                    }
+                    myDb.updateEditData(ID, name);
+                    mRecyclerList.get(position).changeText1(name);
+                    mAdapter.notifyItemChanged(position);
                 }
                 break;
             }
@@ -91,10 +88,10 @@ public class MainActivity extends AppCompatActivity
 	
 	public void insertItem(String text, String seed, int flags){
         boolean inserted = myDb.insertData(text, seed, flags);
-        if (inserted) { // Item was successfully inserted into the database
-            int ID = myDb.getHighestID(); // Get the highest ID in the databse (last item added)
-            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text)); // Add a new item into the recycler list
-            mAdapter.notifyItemInserted(mRecyclerList.size()); // Make an animation
+        if (inserted) {
+            int ID = myDb.getHighestID();
+            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text));
+            mAdapter.notifyItemInserted(mRecyclerList.size());
         }
     }
 
@@ -202,8 +199,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void createRecyclerList(){
-        myDb = new DatabaseHelper(this); // Initialize the database
-        mRecyclerList = new ArrayList<>(); // Initialize the recycler list
+        myDb = new DatabaseHelper(this);
+        mRecyclerList = new ArrayList<>();
 
         Cursor res = myDb.getRecyclerData(); // Get data from the database and store it in a Cursor object
 
@@ -217,15 +214,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void buildRecyclerView(){
-        mRecyclerView = findViewById(R.id.recyclerView1); // Initialize recycler view
-        mLayoutManager = new LinearLayoutManager(this); // Initialize the layout manager
-        mAdapter = new RecyclerViewAdapter(mRecyclerList); // Initialize the recycler view adapter
+        mRecyclerView = findViewById(R.id.recyclerView1);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new RecyclerViewAdapter(mRecyclerList);
 
         mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.setLayoutManager(mLayoutManager); // mLayoutManager = layout manager for recycler view
         mRecyclerView.setAdapter(mAdapter); // mAdapter = layout adapter for recycler view
 
+		// Recycler view clicks handling
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onViewClick(int position) {
@@ -233,12 +231,12 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onItemClick(int position) { // TODO change this (onItemClick) (recycler view item)
-                //changeItem(position, "Clicked"); // TIP: changeItem can be found below
+            public void onItemClick(int position) { // TODO handle onItemClick here (recycler view item)
+                //changeItem(position, "Clicked");
             }
 
             @Override
-            public void onDeleteClick(int position) { // Delete item (position for the recycler list + ID for the database)
+            public void onDeleteClick(int position) {
                 deleteItem(position, mRecyclerList.get(position).getID());
             }
 
@@ -321,18 +319,9 @@ public class MainActivity extends AppCompatActivity
 
 
 
-// request codes used: 1,2,3,4 - Edit
+// request codes used: 1,2,3,4
 
 // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-/*Runnable r = new Runnable() {
-                @Override
-                public void run(){
-                    doSomething(); //<-- put your code in here.
-                }
-            };
-            Handler h = new Handler();
-            h.postDelayed(r, 1000); // <-- the "1000" is the delay time in miliseconds.*/
 
 /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             @Override
