@@ -22,7 +22,9 @@ public class EditPasswordActivity extends AppCompatActivity {
 
 
         // Give access only to this app
-        if(getIntent().hasExtra("com.tomi5548319.getpass.EDIT_ID") && getIntent().hasExtra("com.tomi5548319.getpass.EDIT_POSITION") && getIntent().hasExtra("com.tomi5548319.getpass.EDIT_NAME") && getIntent().hasExtra("com.tomi5548319.getpass.EDIT_SEED") && getIntent().hasExtra("com.tomi5548319.getpass.EDIT_KEY")) {
+        if(getIntent().hasExtra("com.tomi5548319.getpass.EDIT_ID")
+		&& getIntent().hasExtra("com.tomi5548319.getpass.EDIT_POSITION")
+		&& getIntent().hasExtra("com.tomi5548319.getpass.EDIT_NAME")) {
 
             mID = getIntent().getExtras().getInt("com.tomi5548319.getpass.EDIT_ID");
             mPosition = getIntent().getExtras().getInt("com.tomi5548319.getpass.EDIT_POSITION");

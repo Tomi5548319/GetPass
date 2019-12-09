@@ -288,8 +288,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("com.tomi5548319.getpass.EDIT_ID", ID);
         intent.putExtra("com.tomi5548319.getpass.EDIT_POSITION", position);
         intent.putExtra("com.tomi5548319.getpass.EDIT_NAME", name);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_SEED", seed);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_KEY", mKey);
         startActivityForResult(intent, 4);
 
     }
