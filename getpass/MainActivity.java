@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_title);
 
-        startEnterKeyActivity();
+        startEnterKeyActivity(); // Password is required to access other passwords
     }
 
     private void startEnterKeyActivity(){
@@ -50,28 +50,34 @@ public class MainActivity extends AppCompatActivity
         switch(requestCode) {
             case (1) : { // AddNewPasswordActivity closed
                 if (resultCode == RESULT_OK) { // Activity closed successfully
+					// Get data from returned intent
                     String name = data.getStringExtra("NAME");
                     String seed = data.getStringExtra("SEED");
                     int flag = data.getIntExtra("FLAG", 0);
-                    insertItem(name, seed, flag); // Add new item
+					
+					// Add a new item
+                    insertItem(name, seed, flag);
                 }
                 break;
             }
             case (3) : { // EnterKeyActivity closed
                 if (resultCode == RESULT_OK) { // Activity closed successfully
+					// Get the key from the returned intent and start main
                     mKey = data.getStringExtra("KEY");
                     main();
-                }else{ // Activity didn't close properly
+                }else{ // Activity didn't close properly, it has to be reloaded
                     startEnterKeyActivity();
                 }
                 break;
             }
             case (4) : { // EditPasswordActivity closed
                 if(resultCode == RESULT_OK) { // Activity closed successfully
+					// Get data from the returned intent
                     int ID = data.getIntExtra("ID", -1);
                     int position = data.getIntExtra("POSITION", -1);
                     String name = data.getStringExtra("NAME");
 
+					// TODO check if this if is necessary
                     if(ID != -1 && position != -1){
                         myDb.updateEditData(ID, name);
                         mRecyclerList.get(position).changeText1(name);
@@ -80,6 +86,15 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             }
+        }
+    }
+	
+	public void insertItem(String text, String seed, int flags){
+        boolean inserted = myDb.insertData(text, seed, flags);
+        if (inserted) { // Item was successfully inserted into the database
+            int ID = myDb.getHighestID(); // Get the highest ID in the databse (last item added)
+            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text)); // Add a new item into the recycler list
+            mAdapter.notifyItemInserted(mRecyclerList.size()); // Make an animation
         }
     }
 
@@ -232,15 +247,6 @@ public class MainActivity extends AppCompatActivity
                 editItem(mRecyclerList.get(position).getID(), position);
             }
         });
-    }
-
-    public void insertItem(String text, String seed, int flags){
-        boolean inserted = myDb.insertData(text, seed, flags);
-        if (inserted) { // Item was successfully inserted into the database
-            int ID = myDb.getHighestID(); // Get the highest ID in the databse (last item added)
-            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text)); // Add a new item into the recycler list
-            mAdapter.notifyItemInserted(mRecyclerList.size()); // Make an animation
-        }
     }
 
     public void viewItem(int ID){
