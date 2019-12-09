@@ -30,6 +30,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 	// TODO Don't delete the old database, copy the data into the new one instead
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+		checkForUpdates();
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
