@@ -9,24 +9,30 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
+import android.widget.Switch;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class AddNewPasswordActivity extends AppCompatActivity{
 
     private EditText mEditTextName;
+    private EditText mEditTextLength;
+    private TextView mTextViewLength;
+    private Switch mSwitchSmall;
+    private Switch mSwitchBig;
+    private Switch mSwitchNumbers;
+    private Switch mSwitchBasicCharacters;
+    private Switch mSwitchAdvancedCharacters;
+    private EditText mEditTextCustom;
+    private TextView mTextViewCustom;
 
     private String mName;
     private String mKey;
+    private boolean mAdvancedHidden;
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    //ExpandableListAdapter listAdapter;
+    //ExpandableListView expListView;
+    //List<String> listDataHeader;
+    //HashMap<String, List<String>> listDataChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -49,20 +55,20 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     private void onCreate(){
 
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.Advanced_generation_settings);
+        //expListView = findViewById(R.id.Advanced_generation_settings);
 
         // preparing list data
-        prepareListData();
+        // prepareListData();
 
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+        // listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
 
         // setting list adapter
-        expListView.setAdapter(listAdapter);
+        // expListView.setAdapter(listAdapter);
 
         /*expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int i) {
-                TextView test = (TextView) findViewById(R.id.textViewAddTest);
+                TextView test = (TextView) findViewById(R.id.textView_list_item0);
                 test.setVisibility(View.VISIBLE);
             }
         });
@@ -70,10 +76,59 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int i) {
-                TextView test = (TextView) findViewById(R.id.textViewAddTest);
+                TextView test = (TextView) findViewById(R.id.textView_list_item0);
                 test.setVisibility(View.GONE);
             }
         });*/
+
+
+
+        // ADVANCED
+        mAdvancedHidden = true;
+
+        Button buttonAdvanced = (Button) findViewById(R.id.button_add_advanced);
+        buttonAdvanced.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mEditTextLength = (EditText) findViewById(R.id.editText_add_length);
+                mTextViewLength = (TextView) findViewById(R.id.textView_add_length);
+                mSwitchSmall = (Switch) findViewById(R.id.switch_add_small);
+                mSwitchBig = (Switch) findViewById(R.id.switch_add_big);
+                mSwitchNumbers = (Switch) findViewById(R.id.switch_add_numbers);
+                mSwitchBasicCharacters = (Switch) findViewById(R.id.switch_add_basic_symbols);
+                mSwitchAdvancedCharacters = (Switch) findViewById(R.id.switch_add_advanced_symbols);
+                mEditTextCustom = (EditText) findViewById(R.id.editText_add_custom_characters);
+                mTextViewCustom = (TextView) findViewById(R.id.textView_add_custom_characters);
+
+                if(mAdvancedHidden){
+                    mEditTextLength.setVisibility(View.VISIBLE);
+                    mTextViewLength.setVisibility(View.VISIBLE);
+                    mSwitchSmall.setVisibility(View.VISIBLE);
+                    mSwitchBig.setVisibility(View.VISIBLE);
+                    mSwitchNumbers.setVisibility(View.VISIBLE);
+                    mSwitchBasicCharacters.setVisibility(View.VISIBLE);
+                    mSwitchAdvancedCharacters.setVisibility(View.VISIBLE);
+                    mEditTextCustom.setVisibility(View.VISIBLE);
+                    mTextViewCustom.setVisibility(View.VISIBLE);
+
+                    mAdvancedHidden = false;
+                }else{
+                    mEditTextLength.setVisibility(View.GONE);
+                    mTextViewLength.setVisibility(View.GONE);
+                    mSwitchSmall.setVisibility(View.GONE);
+                    mSwitchBig.setVisibility(View.GONE);
+                    mSwitchNumbers.setVisibility(View.GONE);
+                    mSwitchBasicCharacters.setVisibility(View.GONE);
+                    mSwitchAdvancedCharacters.setVisibility(View.GONE);
+                    mEditTextCustom.setVisibility(View.GONE);
+                    mTextViewCustom.setVisibility(View.GONE);
+
+                    mAdvancedHidden = true;
+                }
+
+            }
+        });
 
         // GENERATE
         Button buttonGenerate = (Button) findViewById(R.id.button_add_generate);
@@ -102,14 +157,14 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     /*
      * Preparing the list data
      */
-    private void prepareListData() {
+    /*private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding header data
         listDataHeader.add("Advanced");
         /*listDataHeader.add("Now Showing");
-        listDataHeader.add("Coming Soon..");*/
+        listDataHeader.add("Coming Soon..");
 
         // Adding child data
         List<String> adv = new ArrayList<String>();
@@ -140,12 +195,12 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         comingSoon.add("The Smurfs 2");
         comingSoon.add("The Spectacular Now");
         comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");*/
+        comingSoon.add("Europa Report");
 
         listDataChild.put(listDataHeader.get(0), adv); // Header, Child data
         /*listDataChild.put(listDataHeader.get(1), nowShowing);
-        listDataChild.put(listDataHeader.get(2), comingSoon);*/
-    }
+        listDataChild.put(listDataHeader.get(2), comingSoon);
+    }*/
 
     private void startSaveNewPasswordActivity(String name, String key){
         Intent intent = new Intent(AddNewPasswordActivity.this, SaveNewPasswordActivity.class);
