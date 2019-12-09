@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the database
-    // TODO Change seed from int to String
+    
     private static final String DATABASE_NAME = "PassGenData.db";
     private static final String TABLE_NAME = "Passwords";
     private static final String COL_1 = "ID"; // int
@@ -20,11 +20,14 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         super(context, DATABASE_NAME, null, 1);
     }
 
+	// Database doesn't exist yet, so it has to be created
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) { // Database doesn't exist
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table " + TABLE_NAME + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT,"+COL_2+" TEXT,"+COL_3+" TEXT,"+COL_4+" TEXT," +COL_5 +" INTEGER)");
     }
 
+	// Database has changed - delete the old one
+	// TODO Don't delete the old database, copy the data into the new one instead
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
@@ -32,7 +35,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     }
 
     boolean insertData(String name, String seed, int flags){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2,name);
         contentValues.put(COL_3,name);
@@ -46,8 +49,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
     Cursor getRecyclerData(){
         checkForUpdates();
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        //onUpgrade(db, 1, 1);
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT " + COL_1 + ", " + COL_2 + " FROM " + TABLE_NAME, null);
     }
 
@@ -113,6 +115,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
         String text = "";
 
+		// TODO WHY???
         if (res.getCount() == 0){
             newestVersion = false;
         }else{
