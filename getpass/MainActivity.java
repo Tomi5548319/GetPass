@@ -38,20 +38,138 @@ public class MainActivity extends AppCompatActivity
         startEnterKeyActivity();
     }
 
-    private void main(){
-        createDrawerAndToolbar();
-        createFAB();
-        createRecyclerList();
-        buildRecyclerView();
-    }
-
     private void startEnterKeyActivity(){
         Intent intent = new Intent(MainActivity.this, EnterKeyActivity.class);
         intent.putExtra("com.tomi5548319.getpass.GET", "KEY");
         startActivityForResult(intent, 3);
     }
 
-    public void createFAB(){ // Button (+)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { // Handle activity results here
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : { // AddNewPasswordActivity closed
+                if (resultCode == RESULT_OK) { // Activity closed successfully
+                    String name = data.getStringExtra("NAME");
+                    String seed = data.getStringExtra("SEED");
+                    int flag = data.getIntExtra("FLAG", 0);
+                    insertItem(name, seed, flag); // Add new item
+                }
+                break;
+            }
+            case (3) : { // EnterKeyActivity closed
+                if (resultCode == RESULT_OK) { // Activity closed successfully
+                    mKey = data.getStringExtra("KEY");
+                    main();
+                }else{ // Activity didn't close properly
+                    startEnterKeyActivity();
+                }
+                break;
+            }
+            case (4) : { // EditPasswordActivity closed
+                if(resultCode == RESULT_OK) { // Activity closed successfully
+                    int ID = data.getIntExtra("ID", -1);
+                    int position = data.getIntExtra("POSITION", -1);
+                    String name = data.getStringExtra("NAME");
+
+                    if(ID != -1 && position != -1){
+                        myDb.updateEditData(ID, name);
+                        mRecyclerList.get(position).changeText1(name);
+                        mAdapter.notifyItemChanged(position);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+	private void main(){
+        createDrawerAndToolbar();
+        createFAB();
+        createRecyclerList();
+        buildRecyclerView();
+	}
+	
+	public void createDrawerAndToolbar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) { // ...
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { // ... Item clicked
+        /* Handle action bar item clicks here. The action bar will
+        automatically handle clicks on the Home/Up button, so long
+         as you specify a parent activity in AndroidManifest.xml.*/
+        int id = item.getItemId();
+
+        // Put switch here if you want more options
+        if (id == R.id.action_changeKey) { // Change Key
+            startEnterKeyActivity();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody") // TODO Delete this later
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) { // TODO Create menu (drawer)
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch(id){
+            case (R.id.nav_home) : {
+
+            }
+            break;
+
+            case (R.id.nav_gallery) : {
+
+            }
+            break;
+
+            case (R.id.nav_slideshow) : {
+
+            }
+            break;
+
+            case (R.id.nav_tools) : {
+
+            }
+            break;
+
+            case (R.id.nav_share) : {
+
+            }
+            break;
+
+            case (R.id.nav_send) : {
+
+            }
+            break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START); // Close the drawer
+        return true;
+    }
+
+	public void createFAB(){ // Button (+)
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,20 +184,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("com.tomi5548319.getpass.ADD", "ADD NEW PASSWORD!");
         intent.putExtra("com.tomi5548319.getpass.ADD_KEY", mKey);
         startActivityForResult(intent, 1);
-    }
-
-    public void createDrawerAndToolbar(){
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void createRecyclerList(){
@@ -139,17 +243,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void deleteItem(int position, int ID){
-        mRecyclerList.remove(position); // Remove the item from recycler list
-        mAdapter.notifyItemRemoved(position); // Make an animation
-        int deleted = myDb.deleteData(ID); // Remove the item from the database
-        if (deleted == 1) { // Item successfully deleted
-            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show();
-        }
-    }
-
     public void viewItem(int ID){
 
         String name = "";
@@ -194,13 +287,24 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, 4);
 
     }
+	
+	public void deleteItem(int position, int ID){
+        mRecyclerList.remove(position); // Remove the item from recycler list
+        mAdapter.notifyItemRemoved(position); // Make an animation
+        int deleted = myDb.deleteData(ID); // Remove the item from the database
+        if (deleted == 1) { // Item successfully deleted
+            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show();
+        }
+    }
 
     public void changeItem(int position, String text){ // TODO Handle onItemClick here (recycler view item)
         mRecyclerList.get(position).changeText1(text); // Change recycler view item
         mAdapter.notifyItemChanged(position); // Make an animation
     }
-
-    @Override
+	
+	@Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) { // Drawer is opened
@@ -209,111 +313,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed(); // Act as normal
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) { // ...
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) { // ... Item clicked
-        /* Handle action bar item clicks here. The action bar will
-        automatically handle clicks on the Home/Up button, so long
-         as you specify a parent activity in AndroidManifest.xml.*/
-        int id = item.getItemId();
-
-        // Put switch here if you want more options
-        if (id == R.id.action_changeKey) { // Change Key
-            startEnterKeyActivity();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) { // TODO Create menu (drawer)
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        switch(id){
-            case (R.id.nav_home) : {
-
-            }
-            break;
-
-            case (R.id.nav_gallery) : {
-
-            }
-            break;
-
-            case (R.id.nav_slideshow) : {
-
-            }
-            break;
-
-            case (R.id.nav_tools) : {
-
-            }
-            break;
-
-            case (R.id.nav_share) : {
-
-            }
-            break;
-
-            case (R.id.nav_send) : {
-
-            }
-            break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START); // Close the drawer
-        return true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) { // Handle activity results here
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (1) : { // AddNewPasswordActivity closed
-                if (resultCode == RESULT_OK) { // Activity closed successfully
-                    String name = data.getStringExtra("NAME");
-                    String seed = data.getStringExtra("SEED");
-                    int flag = data.getIntExtra("FLAG", 0);
-                    insertItem(name, seed, flag); // Add new item
-                }
-                break;
-            }
-            case (3) : { // EnterKeyActivity closed
-                if (resultCode == RESULT_OK) { // Activity closed successfully
-                    mKey = data.getStringExtra("KEY");
-                    main();
-                }else{ // Activity didn't close properly
-                    startEnterKeyActivity();
-                }
-                break;
-            }
-            case (4) : { // EditPasswordActivity closed
-                if(resultCode == RESULT_OK) { // Activity closed successfully
-                    int ID = data.getIntExtra("ID", -1);
-                    int position = data.getIntExtra("POSITION", -1);
-                    String name = data.getStringExtra("NAME");
-
-                    if(ID != -1 && position != -1){
-                        myDb.updateEditData(ID, name);
-                        mRecyclerList.get(position).changeText1(name);
-                        mAdapter.notifyItemChanged(position);
-                    }
-                }
-                break;
-            }
-        }
-    }
-
 }
 
 
