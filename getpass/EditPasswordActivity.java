@@ -14,8 +14,6 @@ public class EditPasswordActivity extends AppCompatActivity {
     private int mID;
     private int mPosition;
     private String mName;
-    private String mSeed;
-    private String mKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +27,6 @@ public class EditPasswordActivity extends AppCompatActivity {
             mID = getIntent().getExtras().getInt("com.tomi5548319.getpass.EDIT_ID");
             mPosition = getIntent().getExtras().getInt("com.tomi5548319.getpass.EDIT_POSITION");
             mName = getIntent().getExtras().getString("com.tomi5548319.getpass.EDIT_NAME");
-            mSeed = getIntent().getExtras().getString("com.tomi5548319.getpass.EDIT_SEED");
-            mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.EDIT_KEY");
 
             final EditText editTextName = (EditText) findViewById(R.id.editText_edit_name);
             editTextName.setText(mName);
@@ -45,8 +41,6 @@ public class EditPasswordActivity extends AppCompatActivity {
                     returnIntent.putExtra("ID", mID);
                     returnIntent.putExtra("POSITION", mPosition);
                     returnIntent.putExtra("NAME", mName);
-                    /*returnIntent.putExtra("SEED", mSeed);
-                    returnIntent.putExtra("KEY", mKey);*/
 
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
