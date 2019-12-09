@@ -42,7 +42,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         contentValues.put(COL_4,seed);
         contentValues.put(COL_5,flags);
 
-        long result = db.insert(TABLE_NAME, null, contentValues); // Insert data into the database
+        long result = db.insert(TABLE_NAME, null, contentValues);
 
         return (result != -1);
     }
@@ -53,19 +53,14 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         return db.rawQuery("SELECT " + COL_1 + ", " + COL_2 + " FROM " + TABLE_NAME, null);
     }
 
-    /*Cursor getAllData(){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        return db.rawQuery("select * from " + TABLE_NAME,null); // Execute the SQL commands and return the result
-    }*/
-
     Integer deleteData(int id){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, "ID = ?",new String[]{"" + id}); // Returns 1 on successfull item removal
     }
 
     int getHighestID(){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        final String MY_QUERY = "SELECT MAX(" +COL_1+ ") AS " +COL_1+ " FROM " + TABLE_NAME; // SQL command which gets the highest ID from databse
+        SQLiteDatabase db = this.getWritableDatabase();
+        final String MY_QUERY = "SELECT MAX(" +COL_1+ ") AS " +COL_1+ " FROM " + TABLE_NAME;
 
         Cursor cursor = db.rawQuery(MY_QUERY, null); // Execute the SQL commands
         cursor.moveToFirst();
@@ -75,28 +70,21 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     }
 
     Cursor getViewData(int id){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id; // SQL command which gets the highest ID from databse
+        SQLiteDatabase db = this.getWritableDatabase();
+        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id;
 
         return db.rawQuery(MY_QUERY, null);
     }
 
     Cursor getEditData(int id){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        final String MY_QUERY = "SELECT " +COL_2+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id; // SQL command which gets the highest ID from databse
+        SQLiteDatabase db = this.getWritableDatabase();
+        final String MY_QUERY = "SELECT " +COL_2+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id;
 
         return db.rawQuery(MY_QUERY, null);
     }
 
-    /*Cursor getRowData(int id){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        final String MY_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE ID = " + id; // SQL command which gets the row with specified ID
-
-        return db.rawQuery(MY_QUERY, null);
-    }*/
-
     boolean updateEditData(int id, String visible_name){
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(COL_2,visible_name);
