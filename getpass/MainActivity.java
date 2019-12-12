@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 			// TODO Display some text on the screen, like: "You don't have any passwords" + Add a new password button
         }else{
             while(res.moveToNext()){ // Insert data into each row
-                mRecyclerList.add(new RecyclerViewItem(res.getInt(0), R.drawable.ic_android, res.getString(1))); // Item 0,1,2,...
+                mRecyclerList.add(new RecyclerViewItem(res.getInt(0), R.drawable.ic_android, res.getString(1)));
             }
         }
     }
@@ -220,8 +220,8 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.setLayoutManager(mLayoutManager); // mLayoutManager = layout manager for recycler view
-        mRecyclerView.setAdapter(mAdapter); // mAdapter = layout adapter for recycler view
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
 		// Recycler view clicks handling
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
@@ -252,9 +252,7 @@ public class MainActivity extends AppCompatActivity
         String name = "";
         String seed = "";
 
-        // Name, Seed
-
-        Cursor res = myDb.getViewData(ID); // Get NAME and SEED from the database and store it in a Cursor object
+        Cursor res = myDb.getViewData(ID);
 
         if(res.getCount() != 0){ // Database is not empty
             res.moveToNext();
