@@ -202,12 +202,12 @@ public class MainActivity extends AppCompatActivity
         myDb = new DatabaseHelper(this);
         mRecyclerList = new ArrayList<>();
 
-        Cursor res = myDb.getRecyclerData(); // Get data from the database and store it in a Cursor object
+        Cursor res = myDb.getRecyclerData();
 
         if(res.getCount() == 0){ // Database is empty
-            // mRecyclerList.add(new RecyclerViewItem(-1, R.drawable.ic_adb, "Create a password")); // "Add new password" recycler view item
-        }else{ // Database is not empty
-            while(res.moveToNext()){ // Do this for each row
+			// TODO Display some text on the screen, like: "You don't have any passwords" + Add a new password button
+        }else{
+            while(res.moveToNext()){ // Insert data into each row
                 mRecyclerList.add(new RecyclerViewItem(res.getInt(0), R.drawable.ic_android, res.getString(1))); // Item 0,1,2,...
             }
         }
