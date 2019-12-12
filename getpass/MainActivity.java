@@ -260,12 +260,16 @@ public class MainActivity extends AppCompatActivity
             seed = res.getString(1);
         }
 
-        Intent intent = new Intent(MainActivity.this, ViewPassword.class);
+		startViewPasswordActivity();
+    }
+	
+	private void startViewPasswordActivity(){
+		Intent intent = new Intent(MainActivity.this, ViewPassword.class);
         intent.putExtra("com.tomi5548319.getpass.VIEW_NAME", name);
         intent.putExtra("com.tomi5548319.getpass.VIEW_SEED", seed);
         intent.putExtra("com.tomi5548319.getpass.VIEW_KEY", mKey);
         startActivity(intent);
-    }
+	}
 
     public void editItem(int ID, int position){
 
