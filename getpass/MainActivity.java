@@ -314,10 +314,10 @@ public class MainActivity extends AppCompatActivity
 	@Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) { // Drawer is opened
-            drawer.closeDrawer(GravityCompat.START); // Close drawer
-        } else { // Drawer is closed
-            super.onBackPressed(); // Act as normal
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }
@@ -326,7 +326,8 @@ public class MainActivity extends AppCompatActivity
 
 // request codes used: 1,2,3,4
 
-// Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+// test this before usage - Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+// this works - Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
 
 /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             @Override
