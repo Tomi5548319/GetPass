@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity
 
         Cursor res = myDb.getViewData(ID);
 
-        if(res.getCount() != 0){ // Database is not empty
+        if(res.getCount() != 0){ // Data was acquired successfully
             res.moveToNext();
             name = res.getString(0);
             seed = res.getString(1);
@@ -275,9 +275,9 @@ public class MainActivity extends AppCompatActivity
         String name = "";
         //String seed = ""; // TODO regenerate a password using seed
 
-        Cursor res = myDb.getEditData(ID); // Get NAME and SEED from the database and store it in a Cursor object
+        Cursor res = myDb.getEditData(ID);
 
-        if(res.getCount() != 0){ // Data acquired successfully
+        if(res.getCount() != 0){ // Data was acquired successfully
             res.moveToNext();
             name = res.getString(0);
             seed = res.getString(1);
@@ -296,13 +296,13 @@ public class MainActivity extends AppCompatActivity
 	}
 	
 	public void deleteItem(int position, int ID){
-        mRecyclerList.remove(position); // Remove the item from recycler list
+        mRecyclerList.remove(position);
         mAdapter.notifyItemRemoved(position); // Make an animation
-        int deleted = myDb.deleteData(ID); // Remove the item from the database
-        if (deleted == 1) { // Item successfully deleted
-            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
+        int deleted = myDb.deleteData(ID);
+        if (deleted == 1) { // Item was deleted successfully
+            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show(); // TODO put theese into strings.xml
         }else{
-            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show(); // TODO add bug reports
         }
     }
 
