@@ -273,23 +273,27 @@ public class MainActivity extends AppCompatActivity
     public void editItem(int ID, int position){
 
         String name = "";
-        String seed = "";
+        //String seed = ""; // TODO regenerate a password using seed
 
         Cursor res = myDb.getEditData(ID); // Get NAME and SEED from the database and store it in a Cursor object
 
-        if(res.getCount() != 0){ // Database is not empty
+        if(res.getCount() != 0){ // Data acquired successfully
             res.moveToNext();
             name = res.getString(0);
             seed = res.getString(1);
+			startEditPasswordActivity(ID, position, name);
         }
 
-        Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
+        
+    }
+	
+	private void startEditPasswordActivity(int ID, int position, String name){
+		Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
         intent.putExtra("com.tomi5548319.getpass.EDIT_ID", ID);
         intent.putExtra("com.tomi5548319.getpass.EDIT_POSITION", position);
         intent.putExtra("com.tomi5548319.getpass.EDIT_NAME", name);
         startActivityForResult(intent, 4);
-
-    }
+	}
 	
 	public void deleteItem(int position, int ID){
         mRecyclerList.remove(position); // Remove the item from recycler list
