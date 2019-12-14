@@ -8,6 +8,11 @@ import android.widget.TextView;
 
 public class ViewPasswordActivity extends AppCompatActivity {
 
+    private TextView mTextViewPassword;
+    private String mPassword;
+    private Button mButtonShow;
+    private Button mButtonHide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,30 +24,30 @@ public class ViewPasswordActivity extends AppCompatActivity {
             String seed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
             String key = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
 
-            final TextView textViewFinalPassword = findViewById(R.id.textView_view_key);
+            mTextViewPassword = findViewById(R.id.textView_view_key);
 
-            final String password = (Password.generate(name, key, seed));
+            mPassword = (Password.generate(name, key, seed));
 
-            textViewFinalPassword.setText("*****");
+            mTextViewPassword.setText("*****");
 
-            final Button buttonShow = findViewById(R.id.button_view_show);
-            final Button buttonHide = findViewById(R.id.button_view_hide);
+            mButtonShow = findViewById(R.id.button_view_show);
+            mButtonHide = findViewById(R.id.button_view_hide);
 
-            buttonShow.setOnClickListener(new View.OnClickListener() {
+            mButtonShow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    textViewFinalPassword.setText(password);
-                    buttonShow.setVisibility(View.INVISIBLE);
-                    buttonHide.setVisibility(View.VISIBLE);
+                    mTextViewPassword.setText(mPassword);
+                    mButtonShow.setVisibility(View.INVISIBLE);
+                    mButtonHide.setVisibility(View.VISIBLE);
                 }
             });
 
-            buttonHide.setOnClickListener(new View.OnClickListener() {
+            mButtonHide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    textViewFinalPassword.setText("*****");
-                    buttonShow.setVisibility(View.VISIBLE);
-                    buttonHide.setVisibility(View.INVISIBLE);
+                    mTextViewPassword.setText("*****");
+                    mButtonShow.setVisibility(View.VISIBLE);
+                    mButtonHide.setVisibility(View.INVISIBLE);
                 }
             });
 
