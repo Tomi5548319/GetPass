@@ -1,2 +1,2 @@
-- Add AndroidManifest.xml
-- Add strings.xml
+- Add AndroidManifest.xml - done
+- Add strings.xml - done
