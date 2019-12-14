@@ -130,8 +130,7 @@ class Password {
         char[] expandedKeys = new char[176];;
 
         // The first 16 bytes are the original key
-        for(int i=0; i<16; i++)
-            expandedKeys[i] = inputKey[i];
+        System.arraycopy(inputKey, 0, expandedKeys, 0, 16);
 
         int bytesGenerated = 16;
         char rconIteration = 1;
@@ -140,8 +139,7 @@ class Password {
         while(bytesGenerated < 176){
 
             // Read 4 bytes for the core
-            for(int i=0; i<4; i++)
-                temp[i] = expandedKeys[i + bytesGenerated - 4];
+            System.arraycopy(expandedKeys, bytesGenerated - 4, temp, 0, 4);
 
             // Perform the core once for each 16 byte key
             if(bytesGenerated % 16 == 0){
@@ -205,9 +203,7 @@ class Password {
         tmp[14] = state[6];
         tmp[15] = state[11];
 
-        for(int i=0; i<16; i++)
-            state[i] = tmp[i];
-
+        System.arraycopy(tmp, 0, state, 0, 16);
 
         return state;
     }
@@ -236,8 +232,7 @@ class Password {
         tmp[14] = (char) (state[12] ^ state[13] ^ MUL2[state[14]] ^ MUL3[state[15]]);
         tmp[15] = (char) (MUL3[state[12]] ^ state[13] ^ state[14] ^ MUL2[state[15]]);
 
-        for(int i=0; i<16; i++)
-            state[i] = tmp[i];
+        System.arraycopy(tmp, 0, state, 0, 16);
 
         return state;
 
