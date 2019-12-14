@@ -31,18 +31,21 @@ class Password {
         char[] c_Key = getKey(key);
         char[] c_Seed = generateSeed();
 
-        if(length <= 16){
-            c_Name = AES_Encrypt(c_Name, c_Key);
-            c_Name = AES_Encrypt(c_Name, c_Seed);
+        if(length > 16)
+            length = 16; // TODO Generate longer passwords than 16 too
 
-            changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
 
-            for(int i=0; i<c_Name.length; i++)
-                c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+        c_Name = AES_Encrypt(c_Name, c_Key);
+        c_Name = AES_Encrypt(c_Name, c_Seed);
 
-            name = new String(c_Name);
-            mSeed = new String(c_Seed);
-        }
+        changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
+
+        for(int i=0; i<length; i++)
+            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+
+        name = new String(c_Name, 0, length);
+        mSeed = new String(c_Seed);
+
 
         return name;
     }
