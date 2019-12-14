@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ViewPassword extends AppCompatActivity {
+public class ViewPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_password);
 
-        
+
         if(getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NAME") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SEED") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_KEY")) {
             String name = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
             String seed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");

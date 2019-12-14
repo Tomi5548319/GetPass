@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity
     }
 	
 	private void startViewPasswordActivity(String name, String seed){
-		Intent intent = new Intent(MainActivity.this, ViewPassword.class);
+		Intent intent = new Intent(MainActivity.this, ViewPasswordActivity.class);
         intent.putExtra("com.tomi5548319.getpass.VIEW_NAME", name);
         intent.putExtra("com.tomi5548319.getpass.VIEW_SEED", seed);
         intent.putExtra("com.tomi5548319.getpass.VIEW_KEY", mKey);
