@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
         if(res.getCount() != 0){ // Data was acquired successfully
             res.moveToNext();
             name = res.getString(0);
-            seed = res.getString(1);
+            // seed = res.getString(1);
 			startEditPasswordActivity(ID, position, name);
         }
 
