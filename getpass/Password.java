@@ -9,23 +9,6 @@ class Password {
     private static char[] ACTUAL_ALPHABET = new char[1000];
     private static int mLength;
 
-    static String generate(String name, String key){
-        char[] Name = getName(name);
-        char[] Key = getKey(key);
-        char[] Seed = generateSeed();
-
-        Name = AES_Encrypt(Name, Key);
-        Name = AES_Encrypt(Name, Seed);
-
-        for(int i=0; i<Name.length; i++)
-            Name[i] = MY_ALPHABET[Name[i] % MY_ALPHABET.length];
-
-        name = new String(Name);
-        mSeed = new String(Seed);
-
-        return name;
-    }
-
     static String generate(String name, String key, String seed){
         char[] c_Name = getName(name);
         char[] c_Key = getKey(key);
