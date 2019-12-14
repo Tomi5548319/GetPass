@@ -12,6 +12,16 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
 
     private TextView mTextViewPassword;
 
+    private String mName;
+    private int mLength;
+    private boolean mSmall;
+    private boolean mBig;
+    private boolean mNumbers;
+    private boolean mBasicChars;
+    private boolean mAdvancedChars;
+    private String mCustomChars;
+    private String mKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,12 +29,11 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
         setTitle(R.string.title_activity_save);
 
         // Give access only to this app
-        if(getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_NAME") || getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_KEY")) {
-            final String name = getIntent().getExtras().getString("com.example.tomi.getpassv100.SAVE_NAME");
-            final String key = getIntent().getExtras().getString("com.example.tomi.getpassv100.SAVE_KEY");
+        if(accessGranted()) {
 
-            String returnValue = Password.generate(name, key);
+            getIntentData();
 
+            String returnValue = Password.generate(mName, mKey);
 
             mTextViewPassword = findViewById(R.id.textView_save_key);
             mTextViewPassword.setText(returnValue);
@@ -41,18 +50,42 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
             buttonRegenerate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mTextViewPassword.setText(Password.generate(name, key));
+                    mTextViewPassword.setText(Password.generate(mName, mKey));
                 }
             });
         }
     }
 
-private void endThisActivity(){
-    String seed = Password.getSeed();
+    private boolean accessGranted(){
+        return  getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_NAME") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_LENGTH") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_SMALL") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_BIG") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_NUMBERS") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_BASIC_CHARS") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_ADVANCED_CHARS") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_CUSTOM_CHARS") &&
+                getIntent().hasExtra("com.example.tomi.getpassv100.SAVE_KEY");
+    }
 
-    Intent returnIntent = new Intent();
-    returnIntent.putExtra("SEED",seed);
-    setResult(Activity.RESULT_OK,returnIntent);
-    finish();
-}
+    private void getIntentData(){
+        mName = getIntent().getExtras().getString("com.example.tomi.getpassv100.SAVE_NAME");
+        mLength = getIntent().getExtras().getInt("com.example.tomi.getpassv100.SAVE_LENGTH");
+        mSmall = getIntent().getExtras().getBoolean("com.example.tomi.getpassv100.SAVE_SMALL");
+        mBig = getIntent().getExtras().getBoolean("com.example.tomi.getpassv100.SAVE_BIG");
+        mNumbers = getIntent().getExtras().getBoolean("com.example.tomi.getpassv100.SAVE_NUMBERS");
+        mBasicChars = getIntent().getExtras().getBoolean("com.example.tomi.getpassv100.SAVE_BASIC_CHARS");
+        mAdvancedChars = getIntent().getExtras().getBoolean("com.example.tomi.getpassv100.SAVE_ADVANCED_CHARS");
+        mCustomChars = getIntent().getExtras().getString("com.example.tomi.getpassv100.SAVE_CUSTOM_CHARS");
+        mKey = getIntent().getExtras().getString("com.example.tomi.getpassv100.SAVE_KEY");
+    }
+
+    private void endThisActivity(){
+        String seed = Password.getSeed();
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("SEED",seed);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+    }
 }
