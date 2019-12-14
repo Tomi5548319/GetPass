@@ -32,8 +32,8 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
         if(accessGranted()) {
 
             getIntentData();
-            
-            String password = Password.generate(mName, mKey);
+
+            String password = Password.generate(mName, mLength, mSmall, mBig, mNumbers, mBasicChars, mAdvancedChars, mCustomChars, mKey);
 
             mTextViewPassword = findViewById(R.id.textView_save_key);
             mTextViewPassword.setText(password);
