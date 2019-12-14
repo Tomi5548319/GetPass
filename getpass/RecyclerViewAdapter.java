@@ -18,14 +18,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
         mRecyclerList = recyclerList;
     }
 
-    public interface OnItemClickListener{
+    interface OnItemClickListener{
         void onItemClick(int position);
         void onViewClick(int position);
         void onEditClick(int position);
         void onDeleteClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
     }
 
