@@ -13,8 +13,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     private ArrayList<RecyclerViewItem> mRecyclerList;
     private OnItemClickListener mListener;
-    //private int mPosition;
-    DatabaseHelper myDb;
 
     RecyclerViewAdapter(ArrayList<RecyclerViewItem> recyclerList){
         mRecyclerList = recyclerList;
@@ -107,8 +105,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
-        myDb = new DatabaseHelper(holder.mImageView1.getContext());
 
         RecyclerViewItem currentItem = mRecyclerList.get(position);
 
