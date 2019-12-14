@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddNewPasswordActivity extends AppCompatActivity{
 
@@ -112,6 +113,13 @@ public class AddNewPasswordActivity extends AppCompatActivity{
                 mEditTextName = findViewById(R.id.editText_add_name);
 
                 mName = mEditTextName.getText().toString();
+                mLength = Integer.parseInt(mEditTextLength.getText().toString());
+                mSmall = mSwitchSmall.isChecked();
+                mBig = mSwitchBig.isChecked();
+                mNumbers = mSwitchNumbers.isChecked();
+                mBasicChars = mSwitchBasicCharacters.isChecked();
+                mAdvancedChars = mSwitchAdvancedCharacters.isChecked();
+                mCustomChars = mEditTextCustom.getText().toString();
 
                 startSaveNewPasswordActivity(mName, mKey);
 
