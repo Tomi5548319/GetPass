@@ -121,12 +121,19 @@ public class AddNewPasswordActivity extends AppCompatActivity{
                 mAdvancedChars = mSwitchAdvancedCharacters.isChecked();
                 mCustomChars = mEditTextCustom.getText().toString();
 
-                startSaveNewPasswordActivity();
+                if(dataIsOkay())
+                    startSaveNewPasswordActivity();
+                else
+                    Toast.makeText(AddNewPasswordActivity.this, "Can't generate a password with data you entered", Toast.LENGTH_LONG).show();
 
                 // TODO implement flags
-
             }
         });
+    }
+
+    private boolean dataIsOkay(){
+        return (mLength > 0 &&
+                (mSmall || mBig || mNumbers || mBasicChars || mAdvancedChars || !mCustomChars.equals("")));
     }
 
     private void startSaveNewPasswordActivity(){
