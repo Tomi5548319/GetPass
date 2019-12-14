@@ -26,6 +26,13 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     private TextView mTextViewCustom;
 
     private String mName;
+    private int mLength;
+    private boolean mSmall;
+    private boolean mBig;
+    private boolean mNumbers;
+    private boolean mBasicChars;
+    private boolean mAdvancedChars;
+    private String mCustomChars;
     private String mKey;
     private boolean mAdvancedHidden;
 
@@ -41,13 +48,13 @@ public class AddNewPasswordActivity extends AppCompatActivity{
             if(getIntent().getExtras().getString("com.tomi5548319.getpass.ADD").equals("ADD NEW PASSWORD!")) {
 
                 mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.ADD_KEY");
-                onCreate();
+                main();
 
             }
         }
     }
 
-    private void onCreate(){
+    private void main(){
 
         // ADVANCED
         mAdvancedHidden = true;
@@ -141,7 +148,7 @@ public class AddNewPasswordActivity extends AppCompatActivity{
                 break;
             }
             default: { // SaveNewPasswordActivity closed, but SAVE was not clicked
-                onCreate();
+                main();
             }
         }
     }
