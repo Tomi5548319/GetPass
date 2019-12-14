@@ -53,9 +53,8 @@ class Password {
 
         Random rand = new Random();
 
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             seed[i] = (char) rand.nextInt(256);
-        }
 
         return seed;
     }
@@ -70,9 +69,9 @@ class Password {
                 Name[Name.length-1] = Name[i]; // [{'N'},{'a'},{'m'},{'e'},{'N'}]
                 i++;
             }
-        }else{ // name is too long
-            Name = Arrays.copyOf(Name, 16);
         }
+        else // name is too long
+            Name = Arrays.copyOf(Name, 16);
 
         return Name;
     }
@@ -87,9 +86,9 @@ class Password {
                 Key[Key.length-1] = Key[i]; // [{'K'},{'e'},{'y'},{'K'}]
                 i++;
             }
-        }else{ // key is too long
-            Key = Arrays.copyOf(Key, 16);
         }
+        else // key is too long
+            Key = Arrays.copyOf(Key, 16);
 
         return Key;
     }
@@ -99,7 +98,7 @@ class Password {
         // TODO Change number of ronds depending on the input
         final int numberOfRounds = 9;
 
-        // Expand the keys:
+        // Expand the keys
         char[] expandedKey = KeyExpansion(key);
 
         state = AddRoundKey(state, key);
@@ -130,10 +129,9 @@ class Password {
 
         char[] expandedKeys = new char[176];;
 
-        // The first 16 bytes are the original key:
-        for(int i=0; i<16; i++){
+        // The first 16 bytes are the original key
+        for(int i=0; i<16; i++)
             expandedKeys[i] = inputKey[i];
-        }
 
         int bytesGenerated = 16;
         char rconIteration = 1;
@@ -142,9 +140,8 @@ class Password {
         while(bytesGenerated < 176){
 
             // Read 4 bytes for the core
-            for(int i=0; i<4; i++){
+            for(int i=0; i<4; i++)
                 temp[i] = expandedKeys[i + bytesGenerated - 4];
-            }
 
             // Perform the core once for each 16 byte key
             if(bytesGenerated % 16 == 0){
@@ -159,9 +156,9 @@ class Password {
     }
 
     private static char[] SubBytes(char[] state){
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] = SUB[state[i]];
-        }
+
         return state;
     }
 
@@ -208,9 +205,9 @@ class Password {
         tmp[14] = state[6];
         tmp[15] = state[11];
 
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] = tmp[i];
-        }
+
 
         return state;
     }
@@ -239,9 +236,8 @@ class Password {
         tmp[14] = (char) (state[12] ^ state[13] ^ MUL2[state[14]] ^ MUL3[state[15]]);
         tmp[15] = (char) (MUL3[state[12]] ^ state[13] ^ state[14] ^ MUL2[state[15]]);
 
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] = tmp[i];
-        }
 
         return state;
 
@@ -286,9 +282,9 @@ class Password {
     };
 
     private static char[] AddRoundKey(char[] state, char[] roundKey){
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] ^= roundKey[i];
-        }
+
         return state;
     }
 
