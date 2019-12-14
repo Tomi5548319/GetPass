@@ -121,7 +121,7 @@ public class AddNewPasswordActivity extends AppCompatActivity{
                 mAdvancedChars = mSwitchAdvancedCharacters.isChecked();
                 mCustomChars = mEditTextCustom.getText().toString();
 
-                startSaveNewPasswordActivity(mName, mKey);
+                startSaveNewPasswordActivity();
 
                 // TODO implement flags
 
@@ -129,10 +129,17 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         });
     }
 
-    private void startSaveNewPasswordActivity(String name, String key){
+    private void startSaveNewPasswordActivity(){
         Intent intent = new Intent(AddNewPasswordActivity.this, SaveNewPasswordActivity.class);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_NAME", name);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_KEY", key);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_NAME", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_LENGTH", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_SMALL", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_BIG", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_NUMBERS", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_BASIC_CHARS", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_ADVANCED_CHARS", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_CUSTOM_CHARS", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_KEY", mKey);
         startActivityForResult(intent, 2);
     }
 
