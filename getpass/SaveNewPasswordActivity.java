@@ -32,11 +32,11 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
         if(accessGranted()) {
 
             getIntentData();
-
-            String returnValue = Password.generate(mName, mKey);
+            
+            String password = Password.generate(mName, mKey);
 
             mTextViewPassword = findViewById(R.id.textView_save_key);
-            mTextViewPassword.setText(returnValue);
+            mTextViewPassword.setText(password);
 
             Button buttonSave = findViewById(R.id.button_save_save);
             buttonSave.setOnClickListener(new View.OnClickListener() {
