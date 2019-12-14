@@ -81,10 +81,9 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
     }
 
     private void endThisActivity(){
-        String seed = Password.getSeed();
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("SEED",seed);
+
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
     }

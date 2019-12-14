@@ -154,13 +154,20 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case (2) : { // SaveNewPasswordActivity closed by clicking SAVE
+            case (2) : { // SaveNewPasswordActivity closed
                 if (resultCode == RESULT_OK) { // Activity closed successfully
 
-                    String seed = data.getStringExtra("SEED");
+                    String seed = Password.getSeed();
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("NAME",mName);
+                    returnIntent.putExtra("LENGTH",mLength);
+                    returnIntent.putExtra("SMALL",mSmall);
+                    returnIntent.putExtra("BIG",mBig);
+                    returnIntent.putExtra("NUMBERS",mNumbers);
+                    returnIntent.putExtra("BASIC_CHARS",mBasicChars);
+                    returnIntent.putExtra("ADVANCED_CHARS",mAdvancedChars);
+                    returnIntent.putExtra("CUSTOM_CHARS",mCustomChars);
                     returnIntent.putExtra("SEED",seed);
                     returnIntent.putExtra("FLAG",123);
 
