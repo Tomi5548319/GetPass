@@ -30,12 +30,12 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder{
-        int mID;
-        ImageView mImageView1;
-        TextView mTextView1;
-        ImageView mImageView2;
-        ImageView mImageView3;
-        ImageView mImageView4;
+        private int mID;
+        private ImageView mImageView1;
+        private TextView mTextView1;
+        private ImageView mImageView2;
+        private ImageView mImageView3;
+        private ImageView mImageView4;
 
         MyViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
