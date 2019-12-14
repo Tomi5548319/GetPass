@@ -40,6 +40,25 @@ class Password {
         return name;
     }
 
+    static String generate(String name, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
+        char[] Name = getName(name);
+        char[] Key = getKey(key);
+        char[] Seed = generateSeed();
+
+        Name = AES_Encrypt(Name, Key);
+        Name = AES_Encrypt(Name, Seed);
+
+        for(int i=0; i<Name.length; i++)
+            Name[i] = MY_ALPHABET[Name[i] % MY_ALPHABET.length];
+
+        name = new String(Name);
+        mSeed = new String(Seed);
+
+        return name;
+    }
+
+
+
     static String getSeed(){
         return mSeed;
     }
