@@ -1,11 +1,7 @@
 package com.tomi5548319.getpass;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.UUID;
 
 class Password {
     private static String mSeed;
