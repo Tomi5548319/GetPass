@@ -24,18 +24,18 @@ class Password {
     }
 
     static String generate(String name, String key, String seed){
-        char[] Name = getName(name);
-        char[] Key = getKey(key);
-        char[] Seed = seed.toCharArray();
+        char[] c_Name = getName(name);
+        char[] c_Key = getKey(key);
+        char[] c_Seed = seed.toCharArray();
 
-        Name = AES_Encrypt(Name, Key);
-        Name = AES_Encrypt(Name, Seed);
+        c_Name = AES_Encrypt(c_Name, c_Key);
+        c_Name = AES_Encrypt(c_Name, c_Seed);
 
-        for(int i=0; i<Name.length; i++)
-            Name[i] = MY_ALPHABET[Name[i] % MY_ALPHABET.length];
+        for(int i=0; i<c_Name.length; i++)
+            c_Name[i] = MY_ALPHABET[c_Name[i] % MY_ALPHABET.length];
 
-        name = new String(Name);
-        mSeed = new String(Seed);
+        name = new String(c_Name);
+        mSeed = new String(c_Seed);
 
         return name;
     }
