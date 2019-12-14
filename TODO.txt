@@ -1,0 +1,2 @@
+- Add AndroidManifest.xml - done
+- Add strings.xml - done

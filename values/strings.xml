@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">GetPass</string>
+    <string name="app_title">Your passwords</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Coming soon&#8230;</string>
+    <string name="nav_header_subtitle">&#8230;or later?</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_changeKey">Change Key</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="title_activity_add">Add a new password</string>
+    <string name="textView_default_text_name">Name:</string>
+    <string name="textView_default_text_password">Key:</string>
+    <string name="editTextName_hint">Website, app&#8230;</string>
+    <string name="editTextPassword_hint">*****</string>
+    <string name="button_generate_text">Generate</string>
+    <string name="textView_default_text_generated_password">Your password:</string>
+
+    <string name="title_activity_save">Save?</string>
+    <string name="textView_generated_password">Your password:</string>
+    <string name="button_save">SAVE</string>
+    <string name="button_cancel">CANCEL</string>
+
+    <string name="button_show">SHOW</string>
+    <string name="button_hide">HIDE</string>
+    <string name="editText_view_password_hint">Enter your access key</string>
+
+    <string name="button_regenerate">REGENERATE</string>
+    <string name="button_advanced">Advanced</string>
+
+    <string name="button_ok">OK</string>
+
+</resources>
