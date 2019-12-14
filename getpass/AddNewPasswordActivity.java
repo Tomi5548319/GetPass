@@ -56,6 +56,16 @@ public class AddNewPasswordActivity extends AppCompatActivity{
 
     private void main(){
 
+        mEditTextLength = findViewById(R.id.editText_add_length);
+        mTextViewLength = findViewById(R.id.textView_add_length);
+        mSwitchSmall = findViewById(R.id.switch_add_small);
+        mSwitchBig = findViewById(R.id.switch_add_big);
+        mSwitchNumbers = findViewById(R.id.switch_add_numbers);
+        mSwitchBasicCharacters = findViewById(R.id.switch_add_basic_symbols);
+        mSwitchAdvancedCharacters = findViewById(R.id.switch_add_advanced_symbols);
+        mEditTextCustom = findViewById(R.id.editText_add_custom_characters);
+        mTextViewCustom = findViewById(R.id.textView_add_custom_characters);
+
         // ADVANCED
         mAdvancedHidden = true;
 
@@ -63,16 +73,6 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         buttonAdvanced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                mEditTextLength = findViewById(R.id.editText_add_length);
-                mTextViewLength = findViewById(R.id.textView_add_length);
-                mSwitchSmall = findViewById(R.id.switch_add_small);
-                mSwitchBig = findViewById(R.id.switch_add_big);
-                mSwitchNumbers = findViewById(R.id.switch_add_numbers);
-                mSwitchBasicCharacters = findViewById(R.id.switch_add_basic_symbols);
-                mSwitchAdvancedCharacters = findViewById(R.id.switch_add_advanced_symbols);
-                mEditTextCustom = findViewById(R.id.editText_add_custom_characters);
-                mTextViewCustom = findViewById(R.id.textView_add_custom_characters);
 
                 if(mAdvancedHidden){
                     mEditTextLength.setVisibility(View.VISIBLE);
