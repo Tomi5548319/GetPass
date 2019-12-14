@@ -132,13 +132,13 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     private void startSaveNewPasswordActivity(){
         Intent intent = new Intent(AddNewPasswordActivity.this, SaveNewPasswordActivity.class);
         intent.putExtra("com.example.tomi.getpassv100.SAVE_NAME", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_LENGTH", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_SMALL", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_BIG", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_NUMBERS", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_BASIC_CHARS", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_ADVANCED_CHARS", mName);
-        intent.putExtra("com.example.tomi.getpassv100.SAVE_CUSTOM_CHARS", mName);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_LENGTH", mLength);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_SMALL", mSmall);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_BIG", mBig);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_NUMBERS", mNumbers);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_BASIC_CHARS", mBasicChars);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_ADVANCED_CHARS", mAdvancedChars);
+        intent.putExtra("com.example.tomi.getpassv100.SAVE_CUSTOM_CHARS", mCustomChars);
         intent.putExtra("com.example.tomi.getpassv100.SAVE_KEY", mKey);
         startActivityForResult(intent, 2);
     }
