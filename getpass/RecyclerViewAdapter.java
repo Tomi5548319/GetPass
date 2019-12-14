@@ -13,31 +13,29 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     private ArrayList<RecyclerViewItem> mRecyclerList;
     private OnItemClickListener mListener;
-    //private int mPosition;
-    DatabaseHelper myDb;
 
     RecyclerViewAdapter(ArrayList<RecyclerViewItem> recyclerList){
         mRecyclerList = recyclerList;
     }
 
-    public interface OnItemClickListener{
+    interface OnItemClickListener{
         void onItemClick(int position);
         void onViewClick(int position);
         void onEditClick(int position);
         void onDeleteClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder{
-        int mID;
-        ImageView mImageView1;
-        TextView mTextView1;
-        ImageView mImageView2;
-        ImageView mImageView3;
-        ImageView mImageView4;
+        private int mID;
+        private ImageView mImageView1;
+        private TextView mTextView1;
+        private ImageView mImageView2;
+        private ImageView mImageView3;
+        private ImageView mImageView4;
 
         MyViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -107,8 +105,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
-        myDb = new DatabaseHelper(holder.mImageView1.getContext());
 
         RecyclerViewItem currentItem = mRecyclerList.get(position);
 

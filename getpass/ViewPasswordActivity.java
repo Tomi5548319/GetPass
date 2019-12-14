@@ -1,13 +1,12 @@
 package com.tomi5548319.getpass;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ViewPassword extends AppCompatActivity {
+public class ViewPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,20 +14,19 @@ public class ViewPassword extends AppCompatActivity {
         setContentView(R.layout.activity_view_password);
 
 
-
         if(getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NAME") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SEED") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_KEY")) {
-            String name = (String) getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
-            String seed = (String) getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
-            String key = (String) getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
+            String name = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
+            String seed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
+            String key = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
 
-            final TextView textViewFinalPassword = (TextView) findViewById(R.id.textView_view_key);
+            final TextView textViewFinalPassword = findViewById(R.id.textView_view_key);
 
             final String password = (Password.generate(name, key, seed));
 
             textViewFinalPassword.setText("*****");
 
-            final Button buttonShow = (Button) findViewById(R.id.button_view_show);
-            final Button buttonHide = (Button) findViewById(R.id.button_view_hide);
+            final Button buttonShow = findViewById(R.id.button_view_show);
+            final Button buttonHide = findViewById(R.id.button_view_hide);
 
             buttonShow.setOnClickListener(new View.OnClickListener() {
                 @Override

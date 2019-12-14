@@ -1,7 +1,6 @@
 package com.tomi5548319.getpass;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,12 +33,7 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
             buttonSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String seed = Password.getSeed();
-
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("SEED",seed);
-                    setResult(Activity.RESULT_OK,returnIntent);
-                    finish();
+                    endThisActivity();
                 }
             });
 
@@ -53,5 +47,12 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
         }
     }
 
+private void endThisActivity(){
+    String seed = Password.getSeed();
 
+    Intent returnIntent = new Intent();
+    returnIntent.putExtra("SEED",seed);
+    setResult(Activity.RESULT_OK,returnIntent);
+    finish();
+}
 }

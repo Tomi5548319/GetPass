@@ -35,14 +35,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_title);
 
-        startEnterKeyActivity();
-    }
-
-    private void main(){
-        createDrawerAndToolbar();
-        createFAB();
-        createRecyclerList();
-        buildRecyclerView();
+        startEnterKeyActivity(); // Password is required in order to access other passwords
     }
 
     private void startEnterKeyActivity(){
@@ -51,24 +44,65 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, 3);
     }
 
-    public void createFAB(){ // Button (+)
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAddNewPasswordActivity();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : { // AddNewPasswordActivity closed
+                if (resultCode == RESULT_OK) { // Activity closed successfully
+					// Get data from returned intent
+                    String name = data.getStringExtra("NAME");
+                    String seed = data.getStringExtra("SEED");
+                    int flag = data.getIntExtra("FLAG", 0);
+					
+					// Add a new item
+                    insertItem(name, seed, flag);
+                }
+                break;
             }
-        });
+            case (3) : { // EnterKeyActivity closed
+                if (resultCode == RESULT_OK) { // Activity closed successfully
+					// Get the key from the returned intent and start main
+                    mKey = data.getStringExtra("KEY");
+                    main();
+                }else{ // EnterKeyActivity didn't close properly, it has to be reloaded
+                    startEnterKeyActivity();
+                }
+                break;
+            }
+            case (4) : { // EditPasswordActivity closed
+                if(resultCode == RESULT_OK) { // Activity closed successfully
+					// Get data from the returned intent
+                    int ID = data.getIntExtra("ID", -1);
+                    int position = data.getIntExtra("POSITION", -1);
+                    String name = data.getStringExtra("NAME");
+
+                    myDb.updateEditData(ID, name);
+                    mRecyclerList.get(position).changeText1(name);
+                    mAdapter.notifyItemChanged(position);
+                }
+                break;
+            }
+        }
+    }
+	
+	public void insertItem(String text, String seed, int flags){
+        boolean inserted = myDb.insertData(text, seed, flags);
+        if (inserted) {
+            int ID = myDb.getHighestID();
+            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text));
+            mAdapter.notifyItemInserted(mRecyclerList.size());
+        }
     }
 
-    private void startAddNewPasswordActivity(){
-        Intent intent = new Intent(MainActivity.this, AddNewPasswordActivity.class);
-        intent.putExtra("com.tomi5548319.getpass.ADD", "ADD NEW PASSWORD!");
-        intent.putExtra("com.tomi5548319.getpass.ADD_KEY", mKey);
-        startActivityForResult(intent, 1);
-    }
-
-    public void createDrawerAndToolbar(){
+	private void main(){
+        createDrawerAndToolbar();
+        createFAB();
+        createRecyclerList();
+        buildRecyclerView();
+	}
+	
+	public void createDrawerAndToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -81,136 +115,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-    public void createRecyclerList(){
-        myDb = new DatabaseHelper(this); // Initialize the database
-        mRecyclerList = new ArrayList<>(); // Initialize the recycler list
-
-        Cursor res = myDb.getRecyclerData(); // Get data from the database and store it in a Cursor object
-
-        if(res.getCount() == 0){ // Database is empty
-            // mRecyclerList.add(new RecyclerViewItem(-1, R.drawable.ic_adb, "Create a password")); // "Add new password" recycler view item
-        }else{ // Database is not empty
-            while(res.moveToNext()){ // Do this for each row
-                mRecyclerList.add(new RecyclerViewItem(res.getInt(0), R.drawable.ic_android, res.getString(1))); // Item 0,1,2,...
-            }
-        }
-    }
-
-    public void buildRecyclerView(){
-        mRecyclerView = findViewById(R.id.recyclerView1); // Initialize recycler view
-        mLayoutManager = new LinearLayoutManager(this); // Initialize the layout manager
-        mAdapter = new RecyclerViewAdapter(mRecyclerList); // Initialize the recycler view adapter
-
-        mRecyclerView.setHasFixedSize(true);
-
-        mRecyclerView.setLayoutManager(mLayoutManager); // mLayoutManager = layout manager for recycler view
-        mRecyclerView.setAdapter(mAdapter); // mAdapter = layout adapter for recycler view
-
-        mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onViewClick(int position) {
-                viewItem(mRecyclerList.get(position).getID());
-            }
-
-            @Override
-            public void onItemClick(int position) { // TODO change this (onItemClick) (recycler view item)
-                //changeItem(position, "Clicked"); // TIP: changeItem can be found below
-            }
-
-            @Override
-            public void onDeleteClick(int position) { // Delete item (position for the recycler list + ID for the database)
-                deleteItem(position, mRecyclerList.get(position).getID());
-            }
-
-            @Override
-            public void onEditClick(int position) {
-                editItem(mRecyclerList.get(position).getID(), position);
-            }
-        });
-    }
-
-    public void insertItem(String text, String seed, int flags){
-        boolean inserted = myDb.insertData(text, seed, flags);
-        if (inserted) { // Item was successfully inserted into the database
-            int ID = myDb.getHighestID(); // Get the highest ID in the databse (last item added)
-            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text)); // Add a new item into the recycler list
-            mAdapter.notifyItemInserted(mRecyclerList.size()); // Make an animation
-        }
-    }
-
-    public void deleteItem(int position, int ID){
-        mRecyclerList.remove(position); // Remove the item from recycler list
-        mAdapter.notifyItemRemoved(position); // Make an animation
-        int deleted = myDb.deleteData(ID); // Remove the item from the database
-        if (deleted == 1) { // Item successfully deleted
-            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void viewItem(int ID){
-
-        String name = "";
-        String seed = "";
-
-        // Name, Seed
-
-        Cursor res = myDb.getViewData(ID); // Get NAME and SEED from the database and store it in a Cursor object
-
-        if(res.getCount() != 0){ // Database is not empty
-            res.moveToNext();
-            name = res.getString(0);
-            seed = res.getString(1);
-        }
-
-        Intent intent = new Intent(MainActivity.this, ViewPassword.class);
-        intent.putExtra("com.tomi5548319.getpass.VIEW_NAME", name);
-        intent.putExtra("com.tomi5548319.getpass.VIEW_SEED", seed);
-        intent.putExtra("com.tomi5548319.getpass.VIEW_KEY", mKey);
-        startActivity(intent);
-    }
-
-    public void editItem(int ID, int position){
-
-        String name = "";
-        String seed = "";
-
-        Cursor res = myDb.getEditData(ID); // Get NAME and SEED from the database and store it in a Cursor object
-
-        if(res.getCount() != 0){ // Database is not empty
-            res.moveToNext();
-            name = res.getString(0);
-            seed = res.getString(1);
-        }
-
-        Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_ID", ID);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_POSITION", position);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_NAME", name);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_SEED", seed);
-        intent.putExtra("com.tomi5548319.getpass.EDIT_KEY", mKey);
-        startActivityForResult(intent, 4);
-
-    }
-
-    public void changeItem(int position, String text){ // TODO Handle onItemClick here (recycler view item)
-        mRecyclerList.get(position).changeText1(text); // Change recycler view item
-        mAdapter.notifyItemChanged(position); // Make an animation
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) { // Drawer is opened
-            drawer.closeDrawer(GravityCompat.START); // Close drawer
-        } else { // Drawer is closed
-            super.onBackPressed(); // Act as normal
-        }
-    }
-
-    @Override
+	
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) { // ...
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -232,7 +138,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings("StatementWithEmptyBody") // TODO Delete this later
     @Override
     public boolean onNavigationItemSelected(MenuItem item) { // TODO Create menu (drawer)
         // Handle navigation view item clicks here.
@@ -275,61 +181,153 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) { // Handle activity results here
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (1) : { // AddNewPasswordActivity closed
-                if (resultCode == RESULT_OK) { // Activity closed successfully
-                    String name = data.getStringExtra("NAME");
-                    String seed = data.getStringExtra("SEED");
-                    int flag = data.getIntExtra("FLAG", 0);
-                    insertItem(name, seed, flag); // Add new item
-                }
-                break;
+	public void createFAB(){ // Button (+)
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAddNewPasswordActivity();
             }
-            case (3) : { // EnterKeyActivity closed
-                if (resultCode == RESULT_OK) { // Activity closed successfully
-                    mKey = data.getStringExtra("KEY");
-                    main();
-                }else{ // Activity didn't close properly
-                    startEnterKeyActivity();
-                }
-                break;
-            }
-            case (4) : { // EditPasswordActivity closed
-                if(resultCode == RESULT_OK) { // Activity closed successfully
-                    int ID = data.getIntExtra("ID", -1);
-                    int position = data.getIntExtra("POSITION", -1);
-                    String name = data.getStringExtra("NAME");
+        });
+    }
 
-                    if(ID != -1 && position != -1){
-                        myDb.updateEditData(ID, name);
-                        mRecyclerList.get(position).changeText1(name);
-                        mAdapter.notifyItemChanged(position);
-                    }
-                }
-                break;
+    private void startAddNewPasswordActivity(){
+        Intent intent = new Intent(MainActivity.this, AddNewPasswordActivity.class);
+        intent.putExtra("com.tomi5548319.getpass.ADD", "ADD NEW PASSWORD!");
+        intent.putExtra("com.tomi5548319.getpass.ADD_KEY", mKey);
+        startActivityForResult(intent, 1);
+    }
+
+    public void createRecyclerList(){
+        myDb = new DatabaseHelper(this);
+        mRecyclerList = new ArrayList<>();
+
+        Cursor res = myDb.getRecyclerData();
+
+        if(res.getCount() == 0){ // Database is empty
+			// TODO Display some text on the screen, like: "You don't have any passwords" + Add a new password button
+        }else{
+            while(res.moveToNext()){ // Insert data into each row
+                mRecyclerList.add(new RecyclerViewItem(res.getInt(0), R.drawable.ic_android, res.getString(1)));
             }
         }
     }
 
+    public void buildRecyclerView(){
+        mRecyclerView = findViewById(R.id.recyclerView1);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new RecyclerViewAdapter(mRecyclerList);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+		// Recycler view clicks handling
+        mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onViewClick(int position) {
+                viewItem(mRecyclerList.get(position).getID());
+            }
+
+            @Override
+            public void onItemClick(int position) { // TODO handle onItemClick here (recycler view item)
+                //changeItem(position, "Clicked");
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                deleteItem(position, mRecyclerList.get(position).getID());
+            }
+
+            @Override
+            public void onEditClick(int position) {
+                editItem(mRecyclerList.get(position).getID(), position);
+            }
+        });
+    }
+
+    public void viewItem(int ID){
+
+        String name = "";
+        String seed = "";
+
+        Cursor res = myDb.getViewData(ID);
+
+        if(res.getCount() != 0){ // Data was acquired successfully
+            res.moveToNext();
+            name = res.getString(0);
+            seed = res.getString(1);
+			startViewPasswordActivity(name, seed);
+        }
+    }
+	
+	private void startViewPasswordActivity(String name, String seed){
+		Intent intent = new Intent(MainActivity.this, ViewPasswordActivity.class);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_NAME", name);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_SEED", seed);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_KEY", mKey);
+        startActivity(intent);
+	}
+
+    public void editItem(int ID, int position){
+
+        String name = "";
+        //String seed = ""; // TODO regenerate a password using seed
+
+        Cursor res = myDb.getEditData(ID);
+
+        if(res.getCount() != 0){ // Data was acquired successfully
+            res.moveToNext();
+            name = res.getString(0);
+            // seed = res.getString(1);
+			startEditPasswordActivity(ID, position, name);
+        }
+
+        
+    }
+	
+	private void startEditPasswordActivity(int ID, int position, String name){
+		Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
+        intent.putExtra("com.tomi5548319.getpass.EDIT_ID", ID);
+        intent.putExtra("com.tomi5548319.getpass.EDIT_POSITION", position);
+        intent.putExtra("com.tomi5548319.getpass.EDIT_NAME", name);
+        startActivityForResult(intent, 4);
+	}
+	
+	public void deleteItem(int position, int ID){
+        mRecyclerList.remove(position);
+        mAdapter.notifyItemRemoved(position); // Make an animation
+        int deleted = myDb.deleteData(ID);
+        if (deleted == 1) { // Item was deleted successfully
+            Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show(); // TODO put theese into strings.xml
+        }else{
+            Toast.makeText(this, "Error, please submit a bug report", Toast.LENGTH_LONG).show(); // TODO add bug reports
+        }
+    }
+
+    public void changeItem(int position, String text){ // TODO Handle onItemClick here (recycler view item)
+        mRecyclerList.get(position).changeText1(text); // Change recycler view item
+        mAdapter.notifyItemChanged(position); // Make an animation
+    }
+	
+	@Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
 
 
-// request codes used: 1,2,3,4 - Edit
+// request codes used: 1,2,3,4
 
-// Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-/*Runnable r = new Runnable() {
-                @Override
-                public void run(){
-                    doSomething(); //<-- put your code in here.
-                }
-            };
-            Handler h = new Handler();
-            h.postDelayed(r, 1000); // <-- the "1000" is the delay time in miliseconds.*/
+// test this before usage - Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+// this works - Toast.makeText(this, "Successfully deleted 1 item", Toast.LENGTH_LONG).show();
 
 /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             @Override

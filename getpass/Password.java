@@ -1,11 +1,7 @@
 package com.tomi5548319.getpass;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.UUID;
 
 class Password {
     private static String mSeed;
@@ -28,18 +24,18 @@ class Password {
     }
 
     static String generate(String name, String key, String seed){
-        char[] Name = getName(name);
-        char[] Key = getKey(key);
-        char[] Seed = seed.toCharArray();
+        char[] c_Name = getName(name);
+        char[] c_Key = getKey(key);
+        char[] c_Seed = seed.toCharArray();
 
-        Name = AES_Encrypt(Name, Key);
-        Name = AES_Encrypt(Name, Seed);
+        c_Name = AES_Encrypt(c_Name, c_Key);
+        c_Name = AES_Encrypt(c_Name, c_Seed);
 
-        for(int i=0; i<Name.length; i++)
-            Name[i] = MY_ALPHABET[Name[i] % MY_ALPHABET.length];
+        for(int i=0; i<c_Name.length; i++)
+            c_Name[i] = MY_ALPHABET[c_Name[i] % MY_ALPHABET.length];
 
-        name = new String(Name);
-        mSeed = new String(Seed);
+        name = new String(c_Name);
+        mSeed = new String(c_Seed);
 
         return name;
     }
@@ -52,18 +48,14 @@ class Password {
 
         // TODO Random
         // TODO SecureRandom
-        /*String uuid = UUID.randomUUID().toString();
-        return uuid;*/
 
         char[] seed = new char[16];
 
         Random rand = new Random();
 
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             seed[i] = (char) rand.nextInt(256);
-        }
 
-        //return "HELLO THERE IM19".toCharArray();
         return seed;
     }
 
@@ -77,9 +69,9 @@ class Password {
                 Name[Name.length-1] = Name[i]; // [{'N'},{'a'},{'m'},{'e'},{'N'}]
                 i++;
             }
-        }else{ // name is too long
-            Name = Arrays.copyOf(Name, 16);
         }
+        else // name is too long
+            Name = Arrays.copyOf(Name, 16);
 
         return Name;
     }
@@ -94,18 +86,19 @@ class Password {
                 Key[Key.length-1] = Key[i]; // [{'K'},{'e'},{'y'},{'K'}]
                 i++;
             }
-        }else{ // key is too long
-            Key = Arrays.copyOf(Key, 16);
         }
+        else // key is too long
+            Key = Arrays.copyOf(Key, 16);
 
         return Key;
     }
 
     private static char[] AES_Encrypt(char[] state, char[] key){
 
+        // TODO Change number of ronds depending on the input
         final int numberOfRounds = 9;
 
-        // Expand the keys:
+        // Expand the keys
         char[] expandedKey = KeyExpansion(key);
 
         state = AddRoundKey(state, key);
@@ -119,9 +112,6 @@ class Password {
                                             expandedKey[16*(i+1)+4], expandedKey[16*(i+1)+5], expandedKey[16*(i+1)+6], expandedKey[16*(i+1)+7],
                                             expandedKey[16*(i+1)+8], expandedKey[16*(i+1)+9], expandedKey[16*(i+1)+10], expandedKey[16*(i+1)+11],
                                             expandedKey[16*(i+1)+12], expandedKey[16*(i+1)+13], expandedKey[16*(i+1)+14], expandedKey[16*(i+1)+15]});
-
-            // expandedKey + (16 * (i+1))
-            // expandedKey[16*(i+1)]
         }
 
         // Final Round
@@ -139,22 +129,17 @@ class Password {
 
         char[] expandedKeys = new char[176];;
 
-        // The first 16 bytes are the original key:
-        for(int i=0; i<16; i++){
-            expandedKeys[i] = inputKey[i];
-        }
+        // The first 16 bytes are the original key
+        System.arraycopy(inputKey, 0, expandedKeys, 0, 16);
 
-        // Variables
-        int bytesGenerated = 16; // 16 bytes have been generated so far
-        char rconIteration = 1; // RCon Iteration begins at 1
-        char[] temp = new char[4]; // Temporary storage for core
+        int bytesGenerated = 16;
+        char rconIteration = 1;
+        char[] temp = new char[4];
 
         while(bytesGenerated < 176){
 
             // Read 4 bytes for the core
-            for(int i=0; i<4; i++){
-                temp[i] = expandedKeys[i + bytesGenerated - 4];
-            }
+            System.arraycopy(expandedKeys, bytesGenerated - 4, temp, 0, 4);
 
             // Perform the core once for each 16 byte key
             if(bytesGenerated % 16 == 0){
@@ -169,9 +154,9 @@ class Password {
     }
 
     private static char[] SubBytes(char[] state){
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] = SUB[state[i]];
-        }
+
         return state;
     }
 
@@ -218,9 +203,7 @@ class Password {
         tmp[14] = state[6];
         tmp[15] = state[11];
 
-        for(int i=0; i<16; i++){
-            state[i] = tmp[i];
-        }
+        System.arraycopy(tmp, 0, state, 0, 16);
 
         return state;
     }
@@ -249,9 +232,7 @@ class Password {
         tmp[14] = (char) (state[12] ^ state[13] ^ MUL2[state[14]] ^ MUL3[state[15]]);
         tmp[15] = (char) (MUL3[state[12]] ^ state[13] ^ state[14] ^ MUL2[state[15]]);
 
-        for(int i=0; i<16; i++){
-            state[i] = tmp[i];
-        }
+        System.arraycopy(tmp, 0, state, 0, 16);
 
         return state;
 
@@ -296,9 +277,9 @@ class Password {
     };
 
     private static char[] AddRoundKey(char[] state, char[] roundKey){
-        for(int i=0; i<16; i++){
+        for(int i=0; i<16; i++)
             state[i] ^= roundKey[i];
-        }
+
         return state;
     }
 

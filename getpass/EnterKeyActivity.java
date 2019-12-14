@@ -20,17 +20,17 @@ public class EnterKeyActivity extends AppCompatActivity {
         if(getIntent().hasExtra("com.tomi5548319.getpass.GET")) {
             String passKey = (String) getIntent().getExtras().getString("com.tomi5548319.getpass.GET");
             if(passKey.equals("KEY")) {
-                onCreate();
+                main();
             }
         }
     }
 
-    private void onCreate(){
+    private void main(){
         Button buttonOk = (Button) findViewById(R.id.button_enter_ok);
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText editTextKey = (EditText) findViewById(R.id.editText_enter_key);
+                EditText editTextKey = findViewById(R.id.editText_enter_key);
                 String key = editTextKey.getText().toString();
 
                 Intent returnIntent = new Intent();
