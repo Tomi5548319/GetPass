@@ -50,7 +50,7 @@ public class SaveNewPasswordActivity extends AppCompatActivity {
             buttonRegenerate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mTextViewPassword.setText(Password.generate(mName, mKey));
+                    mTextViewPassword.setText(Password.generate(mName, mLength, mSmall, mBig, mNumbers, mBasicChars, mAdvancedChars, mCustomChars, mKey));
                 }
             });
         }

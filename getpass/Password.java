@@ -1,10 +1,13 @@
 package com.tomi5548319.getpass;
 
+import java.lang.reflect.AccessibleObject;
 import java.util.Arrays;
 import java.util.Random;
 
 class Password {
     private static String mSeed;
+    private static char[] ACTUAL_ALPHABET = new char[1000];
+    private static int mLength;
 
     static String generate(String name, String key){
         char[] Name = getName(name);
@@ -41,23 +44,62 @@ class Password {
     }
 
     static String generate(String name, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
-        char[] Name = getName(name);
-        char[] Key = getKey(key);
-        char[] Seed = generateSeed();
+        char[] c_Name = getName(name);
+        char[] c_Key = getKey(key);
+        char[] c_Seed = generateSeed();
 
-        Name = AES_Encrypt(Name, Key);
-        Name = AES_Encrypt(Name, Seed);
+        if(length <= 16){
+            c_Name = AES_Encrypt(c_Name, c_Key);
+            c_Name = AES_Encrypt(c_Name, c_Seed);
 
-        for(int i=0; i<Name.length; i++)
-            Name[i] = MY_ALPHABET[Name[i] % MY_ALPHABET.length];
+            changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
 
-        name = new String(Name);
-        mSeed = new String(Seed);
+            for(int i=0; i<c_Name.length; i++)
+                c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+
+            name = new String(c_Name);
+            mSeed = new String(c_Seed);
+        }
 
         return name;
     }
 
+    private static void changeAlphabet(boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars){
+        // Append known alphabets to ACTUAL_ALPHABET
 
+        mLength = 0;
+
+        if(small){
+            System.arraycopy(SMALL_ALPHABET, 0, ACTUAL_ALPHABET, mLength, SMALL_ALPHABET.length);
+            mLength += SMALL_ALPHABET.length;
+        }
+
+        if(big){
+            System.arraycopy(BIG_ALPHABET, 0, ACTUAL_ALPHABET, mLength, BIG_ALPHABET.length);
+            mLength += BIG_ALPHABET.length;
+        }
+
+        if(numbers){
+            System.arraycopy(NUMBERS, 0, ACTUAL_ALPHABET, mLength, NUMBERS.length);
+            mLength += NUMBERS.length;
+        }
+
+        if(basicChars){
+            System.arraycopy(BASIC_CHARS, 0, ACTUAL_ALPHABET, mLength, BASIC_CHARS.length);
+            mLength += BASIC_CHARS.length;
+        }
+
+        if(advancedChars){
+            System.arraycopy(ADVANCED_CHARS, 0, ACTUAL_ALPHABET, mLength, ADVANCED_CHARS.length);
+            mLength += ADVANCED_CHARS.length;
+        }
+
+        if(!customChars.equals("")){
+            char[] custom = customChars.toCharArray();
+            System.arraycopy(custom, 0, ACTUAL_ALPHABET, mLength, custom.length);
+            mLength += custom.length;
+        }
+    }
 
     static String getSeed(){
         return mSeed;
@@ -146,7 +188,7 @@ class Password {
 
     private static char[] KeyExpansion(char[] inputKey){
 
-        char[] expandedKeys = new char[176];;
+        char[] expandedKeys = new char[176];
 
         // The first 16 bytes are the original key
         System.arraycopy(inputKey, 0, expandedKeys, 0, 16);
@@ -352,4 +394,29 @@ class Password {
             '/', '|', 0x5c, ';', '*', '+', '@', '€', '(', ')',
             '$', '&', '%', '^', '<', '>', '~', '[', ']', 0x27
     }; // 5c - \  22 - "  27 - '  .,-?:_"!/;*+@()%       |\€$&^<>~'[]{}
+
+    private static final char[] SMALL_ALPHABET = {
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'u', 'v', 'w', 'x', 'y', 'z'
+    };
+
+    private static final char[] BIG_ALPHABET = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
+
+    private static final char[] NUMBERS = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
+
+    private static final char[] BASIC_CHARS = {
+            '.', ',', '-', '?', ':', '_', '!', '/', ';', '*',
+            '+', '@', '(', ')', '%'
+    };
+
+    private static final char[] ADVANCED_CHARS = {
+            '|', '€', '$', '[', ']', '{', '}'
+    };
 }
