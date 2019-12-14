@@ -48,8 +48,6 @@ class Password {
 
         // TODO Random
         // TODO SecureRandom
-        /*String uuid = UUID.randomUUID().toString();
-        return uuid;*/
 
         char[] seed = new char[16];
 
@@ -59,7 +57,6 @@ class Password {
             seed[i] = (char) rand.nextInt(256);
         }
 
-        //return "HELLO THERE IM19".toCharArray();
         return seed;
     }
 
@@ -99,6 +96,7 @@ class Password {
 
     private static char[] AES_Encrypt(char[] state, char[] key){
 
+        // TODO Change number of ronds depending on the input
         final int numberOfRounds = 9;
 
         // Expand the keys:
@@ -115,9 +113,6 @@ class Password {
                                             expandedKey[16*(i+1)+4], expandedKey[16*(i+1)+5], expandedKey[16*(i+1)+6], expandedKey[16*(i+1)+7],
                                             expandedKey[16*(i+1)+8], expandedKey[16*(i+1)+9], expandedKey[16*(i+1)+10], expandedKey[16*(i+1)+11],
                                             expandedKey[16*(i+1)+12], expandedKey[16*(i+1)+13], expandedKey[16*(i+1)+14], expandedKey[16*(i+1)+15]});
-
-            // expandedKey + (16 * (i+1))
-            // expandedKey[16*(i+1)]
         }
 
         // Final Round
@@ -140,10 +135,9 @@ class Password {
             expandedKeys[i] = inputKey[i];
         }
 
-        // Variables
-        int bytesGenerated = 16; // 16 bytes have been generated so far
-        char rconIteration = 1; // RCon Iteration begins at 1
-        char[] temp = new char[4]; // Temporary storage for core
+        int bytesGenerated = 16;
+        char rconIteration = 1;
+        char[] temp = new char[4];
 
         while(bytesGenerated < 176){
 
