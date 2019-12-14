@@ -29,11 +29,6 @@ public class AddNewPasswordActivity extends AppCompatActivity{
     private String mKey;
     private boolean mAdvancedHidden;
 
-    //ExpandableListAdapter listAdapter;
-    //ExpandableListView expListView;
-    //List<String> listDataHeader;
-    //HashMap<String, List<String>> listDataChild;
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -57,20 +52,20 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         // ADVANCED
         mAdvancedHidden = true;
 
-        Button buttonAdvanced = (Button) findViewById(R.id.button_add_advanced);
+        Button buttonAdvanced = findViewById(R.id.button_add_advanced);
         buttonAdvanced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                mEditTextLength = (EditText) findViewById(R.id.editText_add_length);
-                mTextViewLength = (TextView) findViewById(R.id.textView_add_length);
-                mSwitchSmall = (Switch) findViewById(R.id.switch_add_small);
-                mSwitchBig = (Switch) findViewById(R.id.switch_add_big);
-                mSwitchNumbers = (Switch) findViewById(R.id.switch_add_numbers);
-                mSwitchBasicCharacters = (Switch) findViewById(R.id.switch_add_basic_symbols);
-                mSwitchAdvancedCharacters = (Switch) findViewById(R.id.switch_add_advanced_symbols);
-                mEditTextCustom = (EditText) findViewById(R.id.editText_add_custom_characters);
-                mTextViewCustom = (TextView) findViewById(R.id.textView_add_custom_characters);
+                mEditTextLength = findViewById(R.id.editText_add_length);
+                mTextViewLength = findViewById(R.id.textView_add_length);
+                mSwitchSmall = findViewById(R.id.switch_add_small);
+                mSwitchBig = findViewById(R.id.switch_add_big);
+                mSwitchNumbers = findViewById(R.id.switch_add_numbers);
+                mSwitchBasicCharacters = findViewById(R.id.switch_add_basic_symbols);
+                mSwitchAdvancedCharacters = findViewById(R.id.switch_add_advanced_symbols);
+                mEditTextCustom = findViewById(R.id.editText_add_custom_characters);
+                mTextViewCustom = findViewById(R.id.textView_add_custom_characters);
 
                 if(mAdvancedHidden){
                     mEditTextLength.setVisibility(View.VISIBLE);
@@ -102,12 +97,12 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         });
 
         // GENERATE
-        Button buttonGenerate = (Button) findViewById(R.id.button_add_generate);
+        Button buttonGenerate = findViewById(R.id.button_add_generate);
         buttonGenerate.setOnClickListener(new View.OnClickListener() { // TODO close keyboard
             @Override
             public void onClick(View view) {
 
-                mEditTextName = (EditText) findViewById(R.id.editText_add_name);
+                mEditTextName = findViewById(R.id.editText_add_name);
 
                 mName = mEditTextName.getText().toString();
 
