@@ -44,15 +44,19 @@ public class AddNewPasswordActivity extends AppCompatActivity{
         setTitle(R.string.title_activity_add);
 
         // Give access only to this app
+        if(accessGranted()) {
+            mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.ADD_KEY");
+            main();
+        }
+    }
+
+    private boolean accessGranted(){
         if(getIntent().hasExtra("com.tomi5548319.getpass.ADD")) {
-            //String key = (String) getIntent().getExtras().getString("com.tomi5548319.getpass.ADD");
             if(getIntent().getExtras().getString("com.tomi5548319.getpass.ADD").equals("ADD NEW PASSWORD!")) {
-
-                mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.ADD_KEY");
-                main();
-
+                return true;
             }
         }
+        return false;
     }
 
     private void main(){
