@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity
                     mKey = data.getStringExtra("KEY");
                     main();
                 }else{ // EnterKeyActivity didn't close properly, it has to be reloaded
-                    startEnterKeyActivity();
+                    finish();
+                    // startEnterKeyActivity();
                 }
                 break;
             }
