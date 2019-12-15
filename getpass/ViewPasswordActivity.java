@@ -19,7 +19,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_password);
 
 
-        if(getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NAME") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SEED") && getIntent().hasExtra("com.tomi5548319.getpass.VIEW_KEY")) {
+        if(accessGranted()) {
             String name = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
             String seed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
             String key = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
@@ -52,5 +52,17 @@ public class ViewPasswordActivity extends AppCompatActivity {
             });
 
         }
+    }
+    private boolean accessGranted(){
+        return  getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NAME") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SEED") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_LENGTH") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SMALL") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_BIG") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NUMBERS") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_BASIC_CHARS") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_ADVANCED_CHARS") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_CUSTOM_CHARS") &&
+                getIntent().hasExtra("com.tomi5548319.getpass.VIEW_KEY");
     }
 }
