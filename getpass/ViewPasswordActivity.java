@@ -9,6 +9,18 @@ import android.widget.TextView;
 public class ViewPasswordActivity extends AppCompatActivity {
 
     private TextView mTextViewPassword;
+
+    private String mName;
+    private String mSeed;
+    private int mLength;
+    private boolean mSmall;
+    private boolean mBig;
+    private boolean mNumbers;
+    private boolean mBasicChars;
+    private boolean mAdvancedChars;
+    private String mCustomChars;
+    private String mKey;
+
     private String mPassword;
     private Button mButtonShow;
     private Button mButtonHide;
@@ -20,16 +32,13 @@ public class ViewPasswordActivity extends AppCompatActivity {
 
 
         if(accessGranted()) {
-            String name = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
-            String seed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
-            String key = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
+            getIntentData();
 
             mTextViewPassword = findViewById(R.id.textView_view_key);
-
-            mPassword = (Password.generate(name, key, seed));
-
             mTextViewPassword.setText("*****");
 
+            mPassword = (Password.generate(mName, mSeed, mLength, mSmall, mBig, mNumbers, mBasicChars, mAdvancedChars, mCustomChars, mKey));
+            
             mButtonShow = findViewById(R.id.button_view_show);
             mButtonHide = findViewById(R.id.button_view_hide);
 
@@ -53,6 +62,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
 
         }
     }
+
     private boolean accessGranted(){
         return  getIntent().hasExtra("com.tomi5548319.getpass.VIEW_NAME") &&
                 getIntent().hasExtra("com.tomi5548319.getpass.VIEW_SEED") &&
@@ -64,5 +74,18 @@ public class ViewPasswordActivity extends AppCompatActivity {
                 getIntent().hasExtra("com.tomi5548319.getpass.VIEW_ADVANCED_CHARS") &&
                 getIntent().hasExtra("com.tomi5548319.getpass.VIEW_CUSTOM_CHARS") &&
                 getIntent().hasExtra("com.tomi5548319.getpass.VIEW_KEY");
+    }
+
+    private void getIntentData(){
+        mName = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_NAME");
+        mSeed = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_SEED");
+        mLength = getIntent().getExtras().getInt("com.tomi5548319.getpass.VIEW_LENGTH");
+        mSmall = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_SMALL");
+        mBig = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_BIG");
+        mNumbers = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_NUMBERS");
+        mBasicChars = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_BASIC_CHARS");
+        mAdvancedChars = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_ADVANCED_CHARS");
+        mCustomChars = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_CUSTOM_CHARS");
+        mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
     }
 }
