@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
                     int flag = data.getIntExtra("FLAG", 0);
 					
 					// Add a new item
-                    insertItem(name, seed, flag);
+                    insertItem(name, length, small, big, numbers, basicChars, advancedChars, customChars, seed, flag);
                 }
                 break;
             }
@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 	
-	public void insertItem(String text, String seed, int flags){
-        boolean inserted = myDb.insertData(text, seed, flags);
+	public void insertItem(String name, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String seed, int flags){
+        boolean inserted = myDb.insertData(name, length, small, big, numbers, basicChars, advancedChars, customChars, seed, flags);
         if (inserted) {
             int ID = myDb.getHighestID();
-            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, text));
+            mRecyclerList.add(new RecyclerViewItem(ID, R.drawable.ic_android, name));
             mAdapter.notifyItemInserted(mRecyclerList.size());
         }
     }
