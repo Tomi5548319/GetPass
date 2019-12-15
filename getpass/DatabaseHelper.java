@@ -35,8 +35,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
                 +COL_5+" INTEGER," +COL_6 +" INTEGER," +COL_7 +" INTEGER," +COL_8 +" INTEGER," +COL_9 +" INTEGER," +COL_10 +" INTEGER," +COL_11 +" INTEGER," +COL_12 +" TEXT)");
     }
 
-	// Database has changed - delete the old one
-	// TODO Don't delete the old database, copy the data into the new one instead (do it in checkForUpdates() method)
+	// Database has changed - copy data from old tables to the newest one, and delete old tables
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 		checkForUpdates();
@@ -117,58 +116,36 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         return true;
     }
 
-    void checkForUpdates(){ //TODO implement multiple tables (v1, v2...)
-        // TODO copy data from the old database to the new one
-        SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
-        boolean newestVersion = true;
+    void checkForUpdates(){
 
-        Cursor res = db.rawQuery("PRAGMA table_info(" + TABLE_NAME_V2 + ")", null);
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        String text = "";
+        final String MY_QUERY_OLD = "SELECT " +COL_1+ "," +COL_2+ "," +COL_3+ "," +COL_4+ "," +COL_5+ " FROM " + TABLE_NAME;
+        Cursor res = db.rawQuery(MY_QUERY_OLD, null);
 
-		// TODO WHY???
-        if (res.getCount() == 0){
-            newestVersion = false;
-        }else{
-            res.moveToNext();
-            text = res.getString(1);
-            if(!text.equals(COL_1)){
-                newestVersion = false;
-            }else{
-                res.moveToNext();
-                text = res.getString(1);
-                if(!text.equals(COL_2)){
-                    newestVersion = false;
-                }else{
-                    res.moveToNext();
-                    text = res.getString(1);
-                    if(!text.equals(COL_3)){
-                        newestVersion = false;
-                    }else{
-                        res.moveToNext();
-                        text = res.getString(1);
-                        if(!text.equals(COL_4)){
-                            newestVersion = false;
-                        }else{
-                            res.moveToNext();
-                            text = res.getString(1);
-                            if(!text.equals(COL_5)){
-                                newestVersion = false;
-                            }else{
+        if(res.getCount() != 0)
+            while(res.moveToNext()){ // Insert data into each row
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COL_1, res.getInt(0));
+                contentValues.put(COL_2, res.getString(1));
+                contentValues.put(COL_3, res.getString(2));
+                contentValues.put(COL_4, res.getString(3));
+                contentValues.put(COL_5, res.getInt(4));
+                contentValues.put(COL_6, 16);
+                contentValues.put(COL_7, 1);
+                contentValues.put(COL_8, 1);
+                contentValues.put(COL_9, 1);
+                contentValues.put(COL_10, 1);
+                contentValues.put(COL_11, 1);
+                contentValues.put(COL_12, "");
 
-                            }
-                        }
-                    }
-                }
+                db.insert(TABLE_NAME_V2, null, contentValues);
+
             }
-        }
-
-        if (!newestVersion){
-            onUpgrade(db, 1, 1);
-        }
 
         res.close();
 
     }
-
 }
+
+// Cursor res = db.rawQuery("PRAGMA table_info(" + TABLE_NAME_V2 + ")", null);
