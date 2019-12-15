@@ -9,18 +9,23 @@ class Password {
     private static char[] ACTUAL_ALPHABET = new char[1000];
     private static int mLength;
 
-    static String generate(String name, String key, String seed){
+    static String generate(String name, String seed, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
         char[] c_Name = getName(name);
         char[] c_Key = getKey(key);
         char[] c_Seed = seed.toCharArray();
 
+        if(length > 16)
+            length = 16;
+
         c_Name = AES_Encrypt(c_Name, c_Key);
         c_Name = AES_Encrypt(c_Name, c_Seed);
 
-        for(int i=0; i<c_Name.length; i++)
-            c_Name[i] = MY_ALPHABET[c_Name[i] % MY_ALPHABET.length];
+        changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
 
-        name = new String(c_Name);
+        for(int i=0; i<length; i++)
+            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+
+        name = new String(c_Name, 0, length);
         mSeed = new String(c_Seed);
 
         return name;
@@ -33,7 +38,6 @@ class Password {
 
         if(length > 16)
             length = 16; // TODO Generate longer passwords than 16 too
-
 
         c_Name = AES_Encrypt(c_Name, c_Key);
         c_Name = AES_Encrypt(c_Name, c_Seed);

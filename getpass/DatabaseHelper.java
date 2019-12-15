@@ -31,16 +31,16 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 	// Database doesn't exist yet, so it has to be created
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table " + TABLE_NAME_V2 + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT," +COL_2+" TEXT," +COL_3+" TEXT," +COL_4+" TEXT,"
+        sqLiteDatabase.execSQL("create table if not exists " + TABLE_NAME_V2 + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT," +COL_2+" TEXT," +COL_3+" TEXT," +COL_4+" TEXT,"
                 +COL_5+" INTEGER," +COL_6 +" INTEGER," +COL_7 +" INTEGER," +COL_8 +" INTEGER," +COL_9 +" INTEGER," +COL_10 +" INTEGER," +COL_11 +" INTEGER," +COL_12 +" TEXT)");
     }
 
 	// Database has changed - copy data from old tables to the newest one, and delete old tables
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-		checkForUpdates();
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
         onCreate(sqLiteDatabase);
+        checkForUpdates();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
     }
 
     boolean insertData(String name, int length, boolean smallBool, boolean bigBool, boolean numbersBool, boolean basicCharsBool, boolean advancedCharsBool, String customChars, String seed, int flags){
@@ -120,32 +120,42 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     void checkForUpdates(){
 
         SQLiteDatabase db = this.getWritableDatabase();
+        onCreate(db);
 
-        final String MY_QUERY_OLD = "SELECT " +COL_1+ "," +COL_2+ "," +COL_3+ "," +COL_4+ "," +COL_5+ " FROM " + TABLE_NAME;
-        Cursor res = db.rawQuery(MY_QUERY_OLD, null);
+        // TODO fix this bug (debug for more info)
+        final String CHECK_QUERY = "SELECT name FROM sqlite_master WHERE type='table' AND name='"+ TABLE_NAME + "'";
+        Cursor res = db.rawQuery(CHECK_QUERY, null);
 
-        if(res.getCount() != 0)
-            while(res.moveToNext()){ // Insert data into each row
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(COL_1, res.getInt(0));
-                contentValues.put(COL_2, res.getString(1));
-                contentValues.put(COL_3, res.getString(2));
-                contentValues.put(COL_4, res.getString(3));
-                contentValues.put(COL_5, res.getInt(4));
-                contentValues.put(COL_6, 16);
-                contentValues.put(COL_7, 1);
-                contentValues.put(COL_8, 1);
-                contentValues.put(COL_9, 1);
-                contentValues.put(COL_10, 1);
-                contentValues.put(COL_11, 1);
-                contentValues.put(COL_12, "");
+        boolean oldDatabaseExists = (res.getCount() == 1);
 
-                db.insert(TABLE_NAME_V2, null, contentValues);
+        if(oldDatabaseExists){
+            final String MY_QUERY_OLD = "SELECT " +COL_1+ "," +COL_2+ "," +COL_3+ "," +COL_4+ "," +COL_5+ " FROM " + TABLE_NAME;
+            Cursor res2 = db.rawQuery(MY_QUERY_OLD, null);
 
-            }
+            if(res2.getCount() != 0)
+                while(res2.moveToNext()){ // Insert data into each row
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(COL_1, res2.getInt(0));
+                    contentValues.put(COL_2, res2.getString(1));
+                    contentValues.put(COL_3, res2.getString(2));
+                    contentValues.put(COL_4, res2.getString(3));
+                    contentValues.put(COL_5, res2.getInt(4));
+                    contentValues.put(COL_6, 16);
+                    contentValues.put(COL_7, 1);
+                    contentValues.put(COL_8, 1);
+                    contentValues.put(COL_9, 1);
+                    contentValues.put(COL_10, 1);
+                    contentValues.put(COL_11, 1);
+                    contentValues.put(COL_12, "");
+
+                    long inserted = db.insert(TABLE_NAME_V2, null, contentValues);
+                    if(inserted != -1)
+                        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
+                }
+            res2.close();
+        }
 
         res.close();
-
     }
 }
 

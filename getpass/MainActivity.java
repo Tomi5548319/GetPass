@@ -69,11 +69,10 @@ public class MainActivity extends AppCompatActivity
             }
             case (3) : { // EnterKeyActivity closed
                 if (resultCode == RESULT_OK) { // Activity closed successfully
-					// Get the key from the returned intent and start main
                     mKey = data.getStringExtra("KEY");
                     main();
-                }else{ // EnterKeyActivity didn't close properly, it has to be reloaded
-                    startEnterKeyActivity();
+                }else{ // EnterKeyActivity didn't close properly, close the app
+                    finish();
                 }
                 break;
             }
