@@ -93,11 +93,12 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
     Cursor getViewData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ " FROM " + TABLE_NAME_V2 + " WHERE ID = " + id;
+        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ "," +COL_6+ "," +COL_7+ "," +COL_8+ "," +COL_9+ "," +COL_10+ "," +COL_11+ "," +COL_12+ " FROM " + TABLE_NAME_V2 + " WHERE ID = " + id;
 
         return db.rawQuery(MY_QUERY, null);
     }
 
+    // TODO regenerate the password
     Cursor getEditData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         final String MY_QUERY = "SELECT " +COL_2+ "," +COL_4+ " FROM " + TABLE_NAME_V2 + " WHERE ID = " + id;
