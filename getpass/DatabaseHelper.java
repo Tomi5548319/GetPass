@@ -10,11 +10,19 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     
     private static final String DATABASE_NAME = "PassGenData.db";
     private static final String TABLE_NAME = "Passwords";
+    private static final String TABLE_NAME_V2 = "Passwords_v2";
     private static final String COL_1 = "ID"; // int
     private static final String COL_2 = "VISIBLE_NAME"; // String (for recycler view purposes only)
     private static final String COL_3 = "NAME"; // String (for generation purposes only)
     private static final String COL_4 = "SEED"; // String
     private static final String COL_5 = "FLAGS"; // int
+    private static final String COL_6 = "LENGTH"; // int
+    private static final String COL_7 = "SMALL"; // boolean (INTEGER)
+    private static final String COL_8 = "BIG"; // boolean (INTEGER)
+    private static final String COL_9 = "NUMBERS"; // boolean (INTEGER)
+    private static final String COL_10 = "BASIC_CHARS"; // boolean (INTEGER)
+    private static final String COL_11 = "ADVANCED_CHARS"; // boolean (INTEGER)
+    private static final String COL_12 = "CUSTOM_CHARS"; // String
 
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -23,11 +31,12 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 	// Database doesn't exist yet, so it has to be created
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table " + TABLE_NAME + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT,"+COL_2+" TEXT,"+COL_3+" TEXT,"+COL_4+" TEXT," +COL_5 +" INTEGER)");
+        sqLiteDatabase.execSQL("create table " + TABLE_NAME_V2 + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT," +COL_2+" TEXT," +COL_3+" TEXT," +COL_4+" TEXT,"
+                +COL_5+" INTEGER," +COL_6 +" INTEGER," +COL_7 +" INTEGER," +COL_8 +" INTEGER," +COL_9 +" INTEGER," +COL_10 +" INTEGER," +COL_11 +" INTEGER," +COL_12 +" TEXT)");
     }
 
 	// Database has changed - delete the old one
-	// TODO Don't delete the old database, copy the data into the new one instead
+	// TODO Don't delete the old database, copy the data into the new one instead (do it in checkForUpdates() method)
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 		checkForUpdates();
@@ -35,15 +44,28 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         onCreate(sqLiteDatabase);
     }
 
-    boolean insertData(String name, String seed, int flags){
+    boolean insertData(String name, int length, boolean smallBool, boolean bigBool, boolean numbersBool, boolean basicCharsBool, boolean advancedCharsBool, String customChars, String seed, int flags){
+        int small = (smallBool) ? 1 : 0;
+        int big = (bigBool) ? 1 : 0;
+        int numbers = (numbersBool) ? 1 : 0;
+        int basicChars = (basicCharsBool) ? 1 : 0;
+        int advancedChars = (advancedCharsBool) ? 1 : 0;
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2,name);
         contentValues.put(COL_3,name);
         contentValues.put(COL_4,seed);
         contentValues.put(COL_5,flags);
+        contentValues.put(COL_6,length);
+        contentValues.put(COL_7,small);
+        contentValues.put(COL_8,big);
+        contentValues.put(COL_9,numbers);
+        contentValues.put(COL_10,basicChars);
+        contentValues.put(COL_11,advancedChars);
+        contentValues.put(COL_12,customChars);
 
-        long result = db.insert(TABLE_NAME, null, contentValues);
+        long result = db.insert(TABLE_NAME_V2, null, contentValues);
 
         return (result != -1);
     }
@@ -51,17 +73,17 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     Cursor getRecyclerData(){
         checkForUpdates();
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT " + COL_1 + ", " + COL_2 + " FROM " + TABLE_NAME, null);
+        return db.rawQuery("SELECT " + COL_1 + ", " + COL_2 + " FROM " + TABLE_NAME_V2, null);
     }
 
     Integer deleteData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, "ID = ?",new String[]{"" + id}); // Returns 1 on successfull item removal
+        return db.delete(TABLE_NAME_V2, "ID = ?",new String[]{"" + id}); // Returns 1 on successfull item removal
     }
 
     int getHighestID(){
         SQLiteDatabase db = this.getWritableDatabase();
-        final String MY_QUERY = "SELECT MAX(" +COL_1+ ") AS " +COL_1+ " FROM " + TABLE_NAME;
+        final String MY_QUERY = "SELECT MAX(" +COL_1+ ") AS " +COL_1+ " FROM " + TABLE_NAME_V2;
 
         Cursor cursor = db.rawQuery(MY_QUERY, null); // Execute the SQL commands
         cursor.moveToFirst();
@@ -72,14 +94,14 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
     Cursor getViewData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id;
+        final String MY_QUERY = "SELECT " +COL_3+ "," +COL_4+ " FROM " + TABLE_NAME_V2 + " WHERE ID = " + id;
 
         return db.rawQuery(MY_QUERY, null);
     }
 
     Cursor getEditData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        final String MY_QUERY = "SELECT " +COL_2+ "," +COL_4+ " FROM " + TABLE_NAME + " WHERE ID = " + id;
+        final String MY_QUERY = "SELECT " +COL_2+ "," +COL_4+ " FROM " + TABLE_NAME_V2 + " WHERE ID = " + id;
 
         return db.rawQuery(MY_QUERY, null);
     }
@@ -90,7 +112,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
         contentValues.put(COL_2,visible_name);
 
-        db.update(TABLE_NAME, contentValues, "id = ?", new String[]{"" + id});
+        db.update(TABLE_NAME_V2, contentValues, "id = ?", new String[]{"" + id});
 
         return true;
     }
@@ -100,7 +122,7 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
         SQLiteDatabase db = this.getWritableDatabase(); // Initialize the database
         boolean newestVersion = true;
 
-        Cursor res = db.rawQuery("PRAGMA table_info(" + TABLE_NAME + ")", null);
+        Cursor res = db.rawQuery("PRAGMA table_info(" + TABLE_NAME_V2 + ")", null);
 
         String text = "";
 
