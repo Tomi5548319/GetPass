@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) { // Activity closed successfully
 					// Get data from returned intent
                     String name = data.getStringExtra("NAME");
+                    int length = data.getIntExtra("LENGTH", 16);
+                    boolean small = data.getBooleanExtra("SMALL", true);
+                    boolean big = data.getBooleanExtra("BIG", true);
+                    boolean numbers = data.getBooleanExtra("NUMBERS", true);
+                    boolean basicChars = data.getBooleanExtra("BASIC_CHARS", true);
+                    boolean advancedChars = data.getBooleanExtra("ADVANCED_CHARS", true);
+                    String customChars = data.getStringExtra("CUSTOM_CHARS");
                     String seed = data.getStringExtra("SEED");
                     int flag = data.getIntExtra("FLAG", 0);
 					
