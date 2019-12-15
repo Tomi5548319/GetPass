@@ -256,23 +256,43 @@ public class MainActivity extends AppCompatActivity
 
     public void viewItem(int ID){
 
-        String name = "";
-        String seed = "";
-
         Cursor res = myDb.getViewData(ID);
 
         if(res.getCount() != 0){ // Data was acquired successfully
             res.moveToNext();
-            name = res.getString(0);
-            seed = res.getString(1);
-			startViewPasswordActivity(name, seed);
+
+            String name = res.getString(0);
+            String seed = res.getString(1);
+            int length = res.getInt(2);
+            int smallInt = res.getInt(3);
+            int bigInt = res.getInt(4);
+            int numbersInt = res.getInt(5);
+            int basicCharsInt = res.getInt(6);
+            int advancedCharsInt = res.getInt(7);
+            String customChars =  res.getString(8);
+
+            // Convert integers to boolean
+            boolean small = (smallInt == 1);
+            boolean big = (bigInt == 1);
+            boolean numbers = (numbersInt == 1);
+            boolean basicChars = (basicCharsInt == 1);
+            boolean advancedChars = (advancedCharsInt == 1);
+
+			startViewPasswordActivity(name, seed, length, small, big, numbers, basicChars, advancedChars, customChars);
         }
     }
 	
-	private void startViewPasswordActivity(String name, String seed){
+	private void startViewPasswordActivity(String name, String seed, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars){
 		Intent intent = new Intent(MainActivity.this, ViewPasswordActivity.class);
         intent.putExtra("com.tomi5548319.getpass.VIEW_NAME", name);
         intent.putExtra("com.tomi5548319.getpass.VIEW_SEED", seed);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_LENGTH", length);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_SMALL", small);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_BIG", big);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_NUMBERS", numbers);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_BASIC_CHARS", basicChars);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_ADVANCED_CHARS", advancedChars);
+        intent.putExtra("com.tomi5548319.getpass.VIEW_CUSTOM_CHARS", customChars);
         intent.putExtra("com.tomi5548319.getpass.VIEW_KEY", mKey);
         startActivity(intent);
 	}
