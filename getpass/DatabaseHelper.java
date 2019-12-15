@@ -31,16 +31,16 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 	// Database doesn't exist yet, so it has to be created
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table " + TABLE_NAME_V2 + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT," +COL_2+" TEXT," +COL_3+" TEXT," +COL_4+" TEXT,"
+        sqLiteDatabase.execSQL("create table if not exists " + TABLE_NAME_V2 + "("+COL_1+" INTEGER PRIMARY KEY AUTOINCREMENT," +COL_2+" TEXT," +COL_3+" TEXT," +COL_4+" TEXT,"
                 +COL_5+" INTEGER," +COL_6 +" INTEGER," +COL_7 +" INTEGER," +COL_8 +" INTEGER," +COL_9 +" INTEGER," +COL_10 +" INTEGER," +COL_11 +" INTEGER," +COL_12 +" TEXT)");
     }
 
 	// Database has changed - copy data from old tables to the newest one, and delete old tables
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-		checkForUpdates();
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
         onCreate(sqLiteDatabase);
+        checkForUpdates();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
     }
 
     boolean insertData(String name, int length, boolean smallBool, boolean bigBool, boolean numbersBool, boolean basicCharsBool, boolean advancedCharsBool, String customChars, String seed, int flags){
@@ -120,7 +120,9 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
     void checkForUpdates(){
 
         SQLiteDatabase db = this.getWritableDatabase();
-
+        onCreate(db);
+        
+        // TODO fix this bug (debug for more info)
         final String MY_QUERY_OLD = "SELECT " +COL_1+ "," +COL_2+ "," +COL_3+ "," +COL_4+ "," +COL_5+ " FROM " + TABLE_NAME;
         Cursor res = db.rawQuery(MY_QUERY_OLD, null);
 
@@ -140,8 +142,9 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
                 contentValues.put(COL_11, 1);
                 contentValues.put(COL_12, "");
 
-                db.insert(TABLE_NAME_V2, null, contentValues);
-
+                long inserted = db.insert(TABLE_NAME_V2, null, contentValues);
+                if(inserted != -1)
+                    db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
             }
 
         res.close();

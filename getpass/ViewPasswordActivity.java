@@ -38,7 +38,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
             mTextViewPassword.setText("*****");
 
             mPassword = (Password.generate(mName, mSeed, mLength, mSmall, mBig, mNumbers, mBasicChars, mAdvancedChars, mCustomChars, mKey));
-            
+
             mButtonShow = findViewById(R.id.button_view_show);
             mButtonHide = findViewById(R.id.button_view_hide);
 
