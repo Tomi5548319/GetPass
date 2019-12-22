@@ -1,10 +1,14 @@
 package com.tomi5548319.getpass;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ClipData;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ViewPasswordActivity extends AppCompatActivity {
 
@@ -41,6 +45,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
 
             mButtonShow = findViewById(R.id.button_view_show);
             mButtonHide = findViewById(R.id.button_view_hide);
+            Button buttonCopy = findViewById(R.id.button_view_copy);
 
             mButtonShow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -57,6 +62,14 @@ public class ViewPasswordActivity extends AppCompatActivity {
                     mTextViewPassword.setText("*****");
                     mButtonShow.setVisibility(View.VISIBLE);
                     mButtonHide.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            buttonCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setClipboard(ViewPasswordActivity.this, mPassword);
+                    Toast.makeText(ViewPasswordActivity.this, "Copied to clipboard", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -87,5 +100,16 @@ public class ViewPasswordActivity extends AppCompatActivity {
         mAdvancedChars = getIntent().getExtras().getBoolean("com.tomi5548319.getpass.VIEW_ADVANCED_CHARS");
         mCustomChars = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_CUSTOM_CHARS");
         mKey = getIntent().getExtras().getString("com.tomi5548319.getpass.VIEW_KEY");
+    }
+
+    private void setClipboard(Context context, String text) {
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

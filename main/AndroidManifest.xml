@@ -17,7 +17,7 @@
             android:name=".EditPasswordActivity"
             android:label="Edit" />
         <activity
-            android:name=".ViewPassword"
+            android:name=".ViewPasswordActivity"
             android:label="View" />
         <activity
             android:name=".AddNewPasswordActivity"

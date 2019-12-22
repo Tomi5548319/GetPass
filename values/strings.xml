@@ -45,6 +45,7 @@
 
     <string name="button_show">SHOW</string>
     <string name="button_hide">HIDE</string>
+    <string name="button_copy">COPY</string>
     <string name="editText_view_password_hint">Enter your access key</string>
 
     <string name="button_regenerate">REGENERATE</string>
