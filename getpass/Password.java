@@ -1,6 +1,5 @@
 package com.tomi5548319.getpass;
 
-import java.lang.reflect.AccessibleObject;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -372,18 +371,6 @@ class Password {
             0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
             0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
     };
-
-    private static final char[] MY_ALPHABET = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-            'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
-            'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-            'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-            'Y', 'Z', '.', ',', '-', '?', ':', '_', '"', '!',
-            '/', '|', 0x5c, ';', '*', '+', '@', '€', '(', ')',
-            '$', '&', '%', '^', '<', '>', '~', '[', ']', 0x27
-    }; // 5c - \  22 - "  27 - '  .,-?:_"!/;*+@()%       |\€$&^<>~'[]{}
 
     private static final char[] SMALL_ALPHABET = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
