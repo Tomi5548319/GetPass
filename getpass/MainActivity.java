@@ -1,5 +1,6 @@
 package com.tomi5548319.getpass;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -137,11 +138,74 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         // Put switch here if you want more options
-        if (id == R.id.action_changeKey) { // Change Key
-            startEnterKeyActivity();
+        switch (id){
+            case R.id.action_changeKey: // Change Key
+                startEnterKeyActivity();
+                break;
+            case R.id.action_copyData:
+                copyDbDataToClipboard();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void copyDbDataToClipboard(){
+
+        StringBuilder sb = new StringBuilder();
+
+        Cursor res = myDb.getSyncData();
+
+        if(res.getCount() != 0){ // Database is not empty
+            while(res.moveToNext()){ // Insert data into each row
+                sb.append(res.getString(2)) // Name
+                .append("\r\n")
+                .append(res.getInt(5)) // Length
+                .append("\r\n")
+                .append(res.getInt(6)) // Small
+                .append("\r\n")
+                .append(res.getInt(7)) // Big
+                .append("\r\n")
+                .append(res.getInt(8)) // Numbers
+                .append("\r\n")
+                .append(res.getInt(9)) // Basic
+                .append("\r\n")
+                .append(res.getInt(10)) // Advanced
+                .append("\r\n");
+
+                // Custom
+                String prefix = "";
+                for(char c: res.getString(11).toCharArray()){
+                    sb.append(prefix).append((int) c);
+                    prefix = ",";
+                }
+                sb.append("\r\n");
+
+                // Seed
+                prefix = "";
+                for(char c: res.getString(3).toCharArray()){
+                    sb.append(prefix).append((int) c);
+                    prefix = ",";
+                }
+                sb.append("\r\n\r\n");
+
+            }
+        }
+
+        res.close();
+
+        setClipboard(MainActivity.this, sb.toString());
+    }
+
+    private void setClipboard(Context context, String text) {
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody") // TODO Delete this later

@@ -53,7 +53,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
                     mButtonShow.setVisibility(View.INVISIBLE);
                     mButtonHide.setVisibility(View.VISIBLE);
 
-                    char[] seedChar = mSeed.toCharArray();
+                    /*char[] seedChar = mSeed.toCharArray();
                     StringBuilder sb = new StringBuilder();
 
                     for(char c : seedChar) {
@@ -62,7 +62,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
                     }
 
                     String text = sb.toString();
-                    Toast.makeText(ViewPasswordActivity.this, text, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ViewPasswordActivity.this, text, Toast.LENGTH_LONG).show();*/
                 }
             });
 
@@ -73,7 +73,7 @@ public class ViewPasswordActivity extends AppCompatActivity {
                     mButtonShow.setVisibility(View.VISIBLE);
                     mButtonHide.setVisibility(View.INVISIBLE);
 
-                    Toast.makeText(ViewPasswordActivity.this, mSeed, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ViewPasswordActivity.this, mSeed, Toast.LENGTH_LONG).show();
                 }
             });
 

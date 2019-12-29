@@ -157,6 +157,12 @@ class DatabaseHelper extends SQLiteOpenHelper { // TODO Add picture into the dat
 
         res.close();
     }
+
+    Cursor getSyncData(){
+        checkForUpdates();
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME_V2, null);
+    }
 }
 
 // Cursor res = db.rawQuery("PRAGMA table_info(" + TABLE_NAME_V2 + ")", null);
