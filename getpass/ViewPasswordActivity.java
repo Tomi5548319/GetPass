@@ -2,7 +2,6 @@ package com.tomi5548319.getpass;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;

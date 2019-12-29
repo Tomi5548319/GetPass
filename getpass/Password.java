@@ -6,16 +6,13 @@ import java.util.Random;
 class Password {
     private static String mSeed;
     private static char[] ACTUAL_ALPHABET = new char[1000];
-    private static int mLength;
+    private static int mActualAlphabetLength;
 
     // TODO remove redundant code from both generate methods
     static String generate(String name, String seed, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
-        char[] c_Name = modify(name);
-        char[] c_Key = modify(key);
+        char[] c_Name = modify(name, length);
+        char[] c_Key = modify(key, length);
         char[] c_Seed = seed.toCharArray();
-
-        if(length > 16)
-            length = 16;
 
         c_Name = AES_Encrypt(c_Name, c_Key);
         c_Name = AES_Encrypt(c_Name, c_Seed);
@@ -23,7 +20,7 @@ class Password {
         changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
 
         for(int i=0; i<length; i++)
-            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mActualAlphabetLength];
 
         name = new String(c_Name, 0, length);
         mSeed = new String(c_Seed);
@@ -32,12 +29,9 @@ class Password {
     }
 
     static String generate(String name, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
-        char[] c_Name = modify(name);
-        char[] c_Key = modify(key);
-        char[] c_Seed = generateSeed();
-
-        if(length > 16)
-            length = 16; // TODO Generate longer passwords than 16 too
+        char[] c_Name = modify(name, length);
+        char[] c_Key = modify(key, length);
+        char[] c_Seed = generateSeed(length);
 
         c_Name = AES_Encrypt(c_Name, c_Key);
         c_Name = AES_Encrypt(c_Name, c_Seed);
@@ -45,11 +39,10 @@ class Password {
         changeAlphabet(small, big, numbers, basicChars, advancedChars, customChars);
 
         for(int i=0; i<length; i++)
-            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mLength];
+            c_Name[i] = ACTUAL_ALPHABET[c_Name[i] % mActualAlphabetLength];
 
         name = new String(c_Name, 0, length);
         mSeed = new String(c_Seed);
-
 
         return name;
     }
@@ -57,37 +50,37 @@ class Password {
     private static void changeAlphabet(boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars){
         // Append known alphabets to ACTUAL_ALPHABET
 
-        mLength = 0;
+        mActualAlphabetLength = 0;
 
         if(small){
-            System.arraycopy(SMALL_ALPHABET, 0, ACTUAL_ALPHABET, mLength, SMALL_ALPHABET.length);
-            mLength += SMALL_ALPHABET.length;
+            System.arraycopy(SMALL_ALPHABET, 0, ACTUAL_ALPHABET, mActualAlphabetLength, SMALL_ALPHABET.length);
+            mActualAlphabetLength += SMALL_ALPHABET.length;
         }
 
         if(big){
-            System.arraycopy(BIG_ALPHABET, 0, ACTUAL_ALPHABET, mLength, BIG_ALPHABET.length);
-            mLength += BIG_ALPHABET.length;
+            System.arraycopy(BIG_ALPHABET, 0, ACTUAL_ALPHABET, mActualAlphabetLength, BIG_ALPHABET.length);
+            mActualAlphabetLength += BIG_ALPHABET.length;
         }
 
         if(numbers){
-            System.arraycopy(NUMBERS, 0, ACTUAL_ALPHABET, mLength, NUMBERS.length);
-            mLength += NUMBERS.length;
+            System.arraycopy(NUMBERS, 0, ACTUAL_ALPHABET, mActualAlphabetLength, NUMBERS.length);
+            mActualAlphabetLength += NUMBERS.length;
         }
 
         if(basicChars){
-            System.arraycopy(BASIC_CHARS, 0, ACTUAL_ALPHABET, mLength, BASIC_CHARS.length);
-            mLength += BASIC_CHARS.length;
+            System.arraycopy(BASIC_CHARS, 0, ACTUAL_ALPHABET, mActualAlphabetLength, BASIC_CHARS.length);
+            mActualAlphabetLength += BASIC_CHARS.length;
         }
 
         if(advancedChars){
-            System.arraycopy(ADVANCED_CHARS, 0, ACTUAL_ALPHABET, mLength, ADVANCED_CHARS.length);
-            mLength += ADVANCED_CHARS.length;
+            System.arraycopy(ADVANCED_CHARS, 0, ACTUAL_ALPHABET, mActualAlphabetLength, ADVANCED_CHARS.length);
+            mActualAlphabetLength += ADVANCED_CHARS.length;
         }
 
         if(!customChars.equals("")){
             char[] custom = customChars.toCharArray();
-            System.arraycopy(custom, 0, ACTUAL_ALPHABET, mLength, custom.length);
-            mLength += custom.length;
+            System.arraycopy(custom, 0, ACTUAL_ALPHABET, mActualAlphabetLength, custom.length);
+            mActualAlphabetLength += custom.length;
         }
     }
 
@@ -95,36 +88,42 @@ class Password {
         return mSeed;
     }
 
-    private static char[] generateSeed(){
+    private static char[] generateSeed(int length){
 
-        // TODO Random
+        length = modifyLength(length);
+
         // TODO SecureRandom
 
-        char[] seed = new char[16];
+        char[] seed = new char[length];
 
         Random rand = new Random();
 
-        for(int i=0; i<16; i++)
+        for(int i = 0; i < length; i++)
             seed[i] = (char) rand.nextInt(256);
 
         return seed;
     }
 
-    private static char[] modify(String text){ // Modify string length
+    private static char[] modify(String text, int length){ // Modify string length
         char[] Text = text.toCharArray();
 
-        if(Text.length <= 16){
-            int i = 0;
-            while(Text.length < 16){
-                Text = Arrays.copyOf(Text, Text.length+1);
-                Text[Text.length-1] = Text[i];
-                i++;
-            }
+        length = modifyLength(length);
+
+        int i = 0;
+        while(Text.length < length){
+            Text = Arrays.copyOf(Text, Text.length+1);
+            Text[Text.length-1] = Text[i];
+            i++;
         }
-        else
-            Text = Arrays.copyOf(Text, 16);
 
         return Text;
+    }
+
+    private static int modifyLength(int length){
+        if(length % 16 != 0)
+            length = ((length / 16) + 1) * 16;
+
+        return length;
     }
 
     private static char[] AES_Encrypt(char[] state, char[] key){
@@ -132,30 +131,40 @@ class Password {
         // TODO Change number of ronds depending on the input key (actual is 4x4 grid => 128 bytes)
         final int numberOfRounds = 9;
 
-        // Expand the keys
-        char[] expandedKey = KeyExpansion(key);
+        for(int j = 0; j < state.length / 16; j++) { // Encode 128 byte blocks
 
-        // Initial round
-        state = AddRoundKey(state, key);
+            char[] temp = Arrays.copyOfRange(state, j*16, j*16 + 16);
 
-        // Rounds
-        for(int i=1; i<=numberOfRounds; i++){
-            state = SubBytes(state);
-            state = ShiftRows(state);
-            state = MixColumns(state);
-            state = AddRoundKey(state, new char[]{ expandedKey[16*i], expandedKey[16*i +1], expandedKey[16*i +2], expandedKey[16*i +3],
-                                            expandedKey[16*i +4], expandedKey[16*i +5], expandedKey[16*i +6], expandedKey[16*i +7],
-                                            expandedKey[16*i +8], expandedKey[16*i +9], expandedKey[16*i +10], expandedKey[16*i +11],
-                                            expandedKey[16*i +12], expandedKey[16*i +13], expandedKey[16*i +14], expandedKey[16*i +15]});
+            // Expand the keys
+            char[] expandedKey = KeyExpansion(Arrays.copyOfRange(key, j*16, j*16 + 16));
+
+            // Initial round
+            temp = AddRoundKey(temp, Arrays.copyOfRange(key, j*16, j*16 + 16));
+
+            // Rounds
+            for (int i = 1; i <= numberOfRounds; i++) {
+                temp = SubBytes(temp);
+                temp = ShiftRows(temp);
+                temp = MixColumns(temp);
+                temp = AddRoundKey(temp, new char[]{expandedKey[16 * i], expandedKey[16 * i + 1], expandedKey[16 * i + 2], expandedKey[16 * i + 3],
+                        expandedKey[16 * i + 4], expandedKey[16 * i + 5], expandedKey[16 * i + 6], expandedKey[16 * i + 7],
+                        expandedKey[16 * i + 8], expandedKey[16 * i + 9], expandedKey[16 * i + 10], expandedKey[16 * i + 11],
+                        expandedKey[16 * i + 12], expandedKey[16 * i + 13], expandedKey[16 * i + 14], expandedKey[16 * i + 15]});
+            }
+
+            // Final Round
+            temp = SubBytes(temp);
+            temp = ShiftRows(temp);
+            temp = AddRoundKey(temp, new char[]{expandedKey[160], expandedKey[161], expandedKey[162], expandedKey[163],
+                    expandedKey[164], expandedKey[165], expandedKey[166], expandedKey[167],
+                    expandedKey[168], expandedKey[169], expandedKey[170], expandedKey[171],
+                    expandedKey[172], expandedKey[173], expandedKey[174], expandedKey[175]});
+
+            for(int k = 0; k < 16; k++)
+                state[j*16 + k] = temp[k];
+
+
         }
-
-        // Final Round
-        state = SubBytes(state);
-        state = ShiftRows(state);
-        state = AddRoundKey(state, new char[]{ expandedKey[160], expandedKey[161], expandedKey[162], expandedKey[163],
-                                        expandedKey[164], expandedKey[165], expandedKey[166], expandedKey[167],
-                                        expandedKey[168], expandedKey[169], expandedKey[170], expandedKey[171],
-                                        expandedKey[172], expandedKey[173], expandedKey[174], expandedKey[175]});
 
         return state;
     }
@@ -398,6 +407,6 @@ class Password {
     };
 
     private static final char[] ADVANCED_CHARS = {
-            '|', '€', '$', '[', ']', '{', '}'
+            '|', '$', '[', ']', '{', '}'
     };
 }
