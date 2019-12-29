@@ -8,9 +8,10 @@ class Password {
     private static char[] ACTUAL_ALPHABET = new char[1000];
     private static int mLength;
 
+    // TODO remove redundant code from both generate methods
     static String generate(String name, String seed, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
-        char[] c_Name = getName(name);
-        char[] c_Key = getKey(key);
+        char[] c_Name = modify(name);
+        char[] c_Key = modify(key);
         char[] c_Seed = seed.toCharArray();
 
         if(length > 16)
@@ -31,8 +32,8 @@ class Password {
     }
 
     static String generate(String name, int length, boolean small, boolean big, boolean numbers, boolean basicChars, boolean advancedChars, String customChars, String key){
-        char[] c_Name = getName(name);
-        char[] c_Key = getKey(key);
+        char[] c_Name = modify(name);
+        char[] c_Key = modify(key);
         char[] c_Seed = generateSeed();
 
         if(length > 16)
@@ -109,38 +110,21 @@ class Password {
         return seed;
     }
 
-    private static char[] getName(String name){ // Modify name length
-        char[] Name = name.toCharArray(); // "Name" => [{'N'},{'a'},{'m'},{'e'}]
+    private static char[] modify(String text){ // Modify string length
+        char[] Text = text.toCharArray();
 
-        if(Name.length <= 16){ // name is too short or ideal
+        if(Text.length <= 16){
             int i = 0;
-            while(Name.length < 16){
-                Name = Arrays.copyOf(Name, Name.length+1); // [{'N'},{'a'},{'m'},{'e'}] => [{'N'},{'a'},{'m'},{'e'},{''}]
-                Name[Name.length-1] = Name[i]; // [{'N'},{'a'},{'m'},{'e'},{'N'}]
+            while(Text.length < 16){
+                Text = Arrays.copyOf(Text, Text.length+1);
+                Text[Text.length-1] = Text[i];
                 i++;
             }
         }
-        else // name is too long
-            Name = Arrays.copyOf(Name, 16);
+        else
+            Text = Arrays.copyOf(Text, 16);
 
-        return Name;
-    }
-
-    private static char[] getKey(String key){ // Modify key length
-        char[] Key = key.toCharArray(); // "Key" => [{'K'},{'e'},{'y'}]
-
-        if(Key.length <= 16){ // key is too short or ideal
-            int i = 0;
-            while(Key.length < 16){
-                Key = Arrays.copyOf(Key, Key.length+1); // [{'K'},{'e'},{'y'}] => [{'K'},{'e'},{'y'},{''}]
-                Key[Key.length-1] = Key[i]; // [{'K'},{'e'},{'y'},{'K'}]
-                i++;
-            }
-        }
-        else // key is too long
-            Key = Arrays.copyOf(Key, 16);
-
-        return Key;
+        return Text;
     }
 
     private static char[] AES_Encrypt(char[] state, char[] key){
